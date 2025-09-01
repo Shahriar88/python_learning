@@ -34,3 +34,58 @@
 ## 📂 Files
 - **`python_tutorial_P1_V1.ipynb`** → Jupyter Notebook export  
 - **`python_tutorial_P1_V1.html`** → HTML export of tutorial session
+
+
+# 📘 Python Tutorial – Part 2
+
+## ✅ Topics Covered
+
+* **Efficient workload chunking** for large datasets
+* **Thread-based parallelism (with chunks)** using `ThreadPoolExecutor`
+* **Vectorized computation in chunks** with NumPy
+* **Numba JIT acceleration in chunks**:
+
+  * Using `@njit(parallel=True)` with `prange`
+  * Handling very large arrays by splitting into batches
+* **CUDA acceleration with Numba**:
+
+  * `@cuda.jit` kernels for elementwise operations
+  * Choosing `threads_per_block` and `blocks_per_grid`
+  * Chunk-based GPU processing for large arrays
+  * Optimized CUDA kernel with tuned block sizes
+* **Device information utilities**:
+
+  * `print_cpu_info()` → CPU core/thread details
+  * `print_cuda_info()` → GPU details (name, SMs, warp size, max threads/block)
+* **Performance comparison across approaches**:
+
+  * Numba (CPU, chunked)
+  * CUDA (basic & optimized, chunked)
+  * ThreadPoolExecutor (chunked)
+  * Pure NumPy vectorization (chunked)
+
+## 🛠️ Implemented Functions
+
+* **`run_numba_chunked()`** → Numba JIT computation in chunks
+* **`run_cuda_chunked()`** → CUDA kernel execution in chunks
+* **`pick_chunk_size()`** → Automatically tune GPU chunk size
+* **`fill_eqn_threaded_chunked()`** → Thread-based parallel processing with chunks
+* **`fill_eqn_vectorized_chunked()`** → NumPy vectorized chunked computation
+* **`print_cpu_info()` / `print_cuda_info()`** → Hardware inspection helpers
+
+## ⚡ Key Concepts Practiced
+
+* **Chunking strategy** to process massive arrays without exhausting memory
+* **CPU vs GPU tradeoffs**: when GPU wins, when CPU (NumPy) is more efficient
+* **Threads vs vectorization vs GPU kernels** performance insights
+* **CUDA architecture basics**:
+
+  * Streaming Multiprocessors (SMs)
+  * Warp size
+  * Threads per block tuning
+* **Correctness validation** → Comparing results across all approaches with `np.allclose`
+
+## 📂 Files
+
+* **`python_tutorial_P2_V0.ipynb`** → Jupyter Notebook export
+* **`python_tutorial_P2_V0.html`** → HTML export of tutorial session
