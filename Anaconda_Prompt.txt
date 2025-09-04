@@ -1,0 +1,24 @@
+# 0) Remove Old env on Python 3.13
+conda env remove --name RF_Lunar_Land
+
+# 1) New env on Python 3.12
+conda create -n RF_Lunar_Land python=3.12 -y
+conda activate RF_Lunar_Land
+
+# 2a) CPU-only PyTorch
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+
+# 2b) Or, GPU build (NVIDIA):
+#    pick the CUDA version that matches your driver/toolkit (e.g., 12.1)
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+
+# 3) JupyterLab (optional)
+conda install -c conda-forge jupyterlab
+
+
+
+
+python code resources:
+
+https://github.com/philtabor
+https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
