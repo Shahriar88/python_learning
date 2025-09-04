@@ -1,3 +1,8 @@
+# Update Conda, setuptools ________________________________________________________________________________________
+conda update -n base -c defaults conda
+pip install -U pip setuptools wheel
+
+
 Option A (recommended): use Python 3.12 _______________________________________________________________
 
 # 0) Remove Old env on Python 3.13
@@ -46,7 +51,21 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 
 install important libraries:_________________________________________________________
 
+
+pip install gym
+pip install gym[box2d]
+
+pip install swig
 pip install "gymnasium"
+or
+pip install "gymnasium[all]"
+conda install -c conda-forge box2d-py swig
+
+pip install "gymnasium[box2d]"
+pip install gymnasium[mujoco]
+
+pip install flappy-bird-gymnasium
+
 pip install rich
 
 pip install numba
@@ -59,6 +78,11 @@ python code resources: _________________________________________________________
 https://github.com/philtabor
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/ActorCritic
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
+
+
+Install _______________________________________________________________________________________
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
 
 
 
