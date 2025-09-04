@@ -17,6 +17,10 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 # 3) JupyterLab (optional)
 conda install -c conda-forge jupyterlab
 
+# 3) Spyder (optional)
+conda install -c conda-forge spyder
+
+
 
 Option B: keep your current env but drop the 3.13 pin (downgrade Python) _______________________________________________________________
 
@@ -31,11 +35,15 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 # or for GPU:
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 
+install important libraries:_________________________________________________________
+
 
 
 
 python code resources: ____________________________________________________________________________________________
 
 https://github.com/philtabor
+https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/ActorCritic
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
+
 
