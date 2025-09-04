@@ -1,3 +1,5 @@
+Option A (recommended): use Python 3.12 _______________________________________________________________
+
 # 0) Remove Old env on Python 3.13
 conda env remove --name RF_Lunar_Land
 
@@ -16,9 +18,24 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 conda install -c conda-forge jupyterlab
 
 
+Option B: keep your current env but drop the 3.13 pin (downgrade Python) _______________________________________________________________
+
+# See if you have pins set
+conda config --show pinned_packages
+
+# Remove the Python pin (if present)
+conda config --remove pinned_packages "python=3.13"
+
+# Try installing again; the solver will likely choose Python 3.12
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+# or for GPU:
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 
 
-python code resources:
+
+
+python code resources: ____________________________________________________________________________________________
 
 https://github.com/philtabor
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
+
