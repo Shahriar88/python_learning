@@ -17,8 +17,17 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 # 3) JupyterLab (optional)
 conda install -c conda-forge jupyterlab
 
-# 3) Spyder (optional)
+# 4) Spyder (optional)
 conda install -c conda-forge spyder
+
+# 5) Matplotlib (optional)
+conda install -c conda-forge matplotlib
+
+# 6) pandas (optional)
+conda install -c conda-forge pandas
+
+# 7) numba (optional)
+conda install -c conda-forge numba cudatoolkit
 
 
 
@@ -37,6 +46,11 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 
 install important libraries:_________________________________________________________
 
+pip install "gymnasium"
+pip install rich
+
+pip install numba
+pip uninstall -y numba llvmlite
 
 
 
@@ -45,5 +59,6 @@ python code resources: _________________________________________________________
 https://github.com/philtabor
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/ActorCritic
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
+
 
 
