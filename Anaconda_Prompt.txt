@@ -52,14 +52,13 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 install important libraries:_________________________________________________________
 
 
-pip install gym
-pip install gym[box2d]
+#pip install gym
+#pip install gym[box2d]
 
 pip install swig
 pip install "gymnasium"
-or
 pip install "gymnasium[all]"
-conda install -c conda-forge box2d-py swig
+pip install Box2D
 
 pip install "gymnasium[box2d]"
 pip install gymnasium[mujoco]
@@ -87,6 +86,7 @@ https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Rein
 
 Install _______________________________________________________________________________________
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
 
 
 
