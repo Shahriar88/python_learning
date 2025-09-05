@@ -75,6 +75,11 @@ pip uninstall -y numba llvmlite
 
 python code resources: ____________________________________________________________________________________________
 
+https://www.youtube.com/watch?v=SMZfgeHFFcA&list=PL9jZRDZXEdTHPOiUDM7SZB4cDdcJfQa8M&index=12
+https://pylessons.com/LunarLander-v2-PPO/
+https://towardsdatascience.com/reinforcement-learning-explained-visually-part-5-deep-q-networks-step-by-step-5a5317197f4b
+https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/5_Deep_Q_Network/RL_brain.py
+
 https://github.com/philtabor
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/ActorCritic
 https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Reinforce
@@ -82,6 +87,7 @@ https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Rein
 
 Install _______________________________________________________________________________________
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
 
 
 
