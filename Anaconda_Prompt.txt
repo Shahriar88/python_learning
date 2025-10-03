@@ -162,6 +162,9 @@ jupyter server \
   --port=8888 \
   --ServerApp.port_retries=0
 
+
+jupyter server --ServerApp.allow_origin='https://colab.research.google.com' --port=8888  --ServerApp.port_retries=0
+
 #_______________________________________________________
 
 
@@ -173,6 +176,7 @@ https://www.argos-sim.info/core.php
 Binary Packages for Ubuntu 22.04 LTS 64bit
 sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
 sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
+
 
 
 
