@@ -34,13 +34,7 @@ conda install -c conda-forge pandas
 # 7) numba (optional)
 conda install -c conda-forge numba cudatoolkit
 
-# Use token for Colab ********************************************************
-jupyter server \
-  --ServerApp.allow_origin='https://colab.research.google.com' \
-  --port=8888 \
-  --ServerApp.port_retries=0
 
-#_______________________________________________________
 
 
 Option B: keep your current env but drop the 3.13 pin (downgrade Python) _______________________________________________________________
@@ -95,6 +89,90 @@ Install ________________________________________________________________________
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 
+# Spyder Noebook 
+pip uninstall ruamel.yaml
+pip uninstall spyder-notebook
+pip install ruamel.yaml==0.17.21
+pip install spyder-notebook==0.4.0
+
+
+
+
+
+
+
+---
+title: "Hydrocat: GPU Environment & YOLOv8 Setup"
+output:
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+# This file is meant as documentation for GitHub.
+# By default, chunks won't execute when knitting.
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+
+
+conda create --name Hydrocat python=3.12
+conda activate Hydrocat
+
+pip install ultralytics matplotlib pandas jupyterlab
+
+# Yolo
+pip install ultralytics -q
+
+# kagglehub is a small helper library for downloading datasets/models directly from Kaggle inside Python.
+pip install kagglehub
+
+# downloading datasets and running notebooks
+pip install kaggle
+
+
+# GPU ************************
+nvidia-smi
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+
+# if error *************************
+conda install --yes --force-reinstall python expat pip
+
+python -c "import xml.parsers.expat; print('expat OK')"
+python -m pip --version
+
+
+
+# Verify CUDA in PyTorch
+import torch
+print(torch.cuda.is_available())   # Should return True
+print(torch.cuda.get_device_name(0))  # Shows your GPU name
+
+
+import torch
+print("CUDA available:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("GPU:", torch.cuda.get_device_name(0))
+
+
+
+# Use token for Colab ********************************************************
+jupyter server \
+  --ServerApp.allow_origin='https://colab.research.google.com' \
+  --port=8888 \
+  --ServerApp.port_retries=0
+
+#_______________________________________________________
+
+
+#_______________________________________________________________________________
+
+# Install ARGoS *********************************************
+https://www.argos-sim.info/core.php
+
+Binary Packages for Ubuntu 22.04 LTS 64bit
+sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
+sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
 
 
 
