@@ -34,6 +34,13 @@ conda install -c conda-forge pandas
 # 7) numba (optional)
 conda install -c conda-forge numba cudatoolkit
 
+# Use token for Colab ********************************************************
+jupyter server \
+  --ServerApp.allow_origin='https://colab.research.google.com' \
+  --port=8888 \
+  --ServerApp.port_retries=0
+
+#_______________________________________________________
 
 
 Option B: keep your current env but drop the 3.13 pin (downgrade Python) _______________________________________________________________
@@ -86,6 +93,7 @@ https://github.com/philtabor/Actor-Critic-Methods-Paper-To-Code/tree/master/Rein
 
 Install _______________________________________________________________________________________
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
 
 
 
