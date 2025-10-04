@@ -79,8 +79,10 @@ pip install flappy-bird-gymnasium
 
 pip install rich
 
-pip install numba
 pip uninstall -y numba llvmlite
+pip install numba
+# llvmlite comes in automatically with numba
+
 
 
 
@@ -187,6 +189,7 @@ https://www.argos-sim.info/core.php
 Binary Packages for Ubuntu 22.04 LTS 64bit
 sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
 sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
+
 
 
 
