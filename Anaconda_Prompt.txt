@@ -34,6 +34,17 @@ conda install -c conda-forge pandas
 # 7) numba (optional)
 conda install -c conda-forge numba cudatoolkit
 
+A) Numba (CPU only)
+conda install -c conda-forge numba
+B) Numba with CUDA 12 support (recommended with your cu124 PyTorch)
+conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc
+
+#Quick check after install
+from numba import cuda
+print("Numba CUDA available:", cuda.is_available())
+print("Driver version:", cuda.runtime.get_driver_version())
+
+
 
 
 
@@ -176,6 +187,7 @@ https://www.argos-sim.info/core.php
 Binary Packages for Ubuntu 22.04 LTS 64bit
 sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
 sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
+
 
 
 
