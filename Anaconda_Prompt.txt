@@ -17,7 +17,7 @@ conda install pytorch torchvision torchaudio cpuonly -c pytorch
 
 # 2b) Or, GPU build (NVIDIA):
 #    pick the CUDA version that matches your driver/toolkit (e.g., 12.1)
-conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
 
 # 3) JupyterLab (optional)
 conda install -c conda-forge jupyterlab
@@ -37,7 +37,7 @@ conda install -c conda-forge numba cudatoolkit
 A) Numba (CPU only)
 conda install -c conda-forge numba
 B) Numba with CUDA 12 support (recommended with your cu124 PyTorch)
-conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc
+conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc -y
 
 #Quick check after install
 from numba import cuda
@@ -189,6 +189,7 @@ https://www.argos-sim.info/core.php
 Binary Packages for Ubuntu 22.04 LTS 64bit
 sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
 sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
+
 
 
 
