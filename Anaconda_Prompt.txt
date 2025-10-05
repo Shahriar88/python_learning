@@ -131,7 +131,7 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 conda create --name Hydrocat python=3.12
 conda activate Hydrocat
 
-pip install ultralytics matplotlib pandas jupyterlab jupyter notebook
+pip install ultralytics matplotlib pandas jupyterlab jupyter notebook spyder
 
 # Yolo
 pip install ultralytics -q
@@ -189,6 +189,7 @@ https://www.argos-sim.info/core.php
 Binary Packages for Ubuntu 22.04 LTS 64bit
 sudo chmod +x argos3_simulator-3.0.0-x86_64-beta59.deb
 sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb 
+
 
 
 
