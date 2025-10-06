@@ -205,7 +205,11 @@ sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb
 
 
 
-
-
+# matplotlib restarting kernel****************************************************************
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-only
+# After matplotlib.plot
+os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
+#_______________________________________________________________________________
 
 
