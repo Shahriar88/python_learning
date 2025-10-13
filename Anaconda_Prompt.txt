@@ -44,6 +44,10 @@ from numba import cuda
 print("Numba CUDA available:", cuda.is_available())
 print("Driver version:", cuda.runtime.get_driver_version())
 
+8) install git
+conda install git
+
+
 
 
 
@@ -211,5 +215,6 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-onl
 # After matplotlib.plot
 os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
 #_______________________________________________________________________________
+
 
 
