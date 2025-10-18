@@ -2,6 +2,10 @@
 conda update -n base -c defaults conda
 pip install -U pip setuptools wheel
 
+pip install -U pip
+pip install opencv-python
+pip install ion-python==1.8.10
+
 
 Option A (recommended): use Python 3.12 _______________________________________________________________
 
@@ -215,6 +219,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-onl
 # After matplotlib.plot
 os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
 #_______________________________________________________________________________
+
 
 
 
