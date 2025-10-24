@@ -227,5 +227,8 @@ https://github.com/dusty-nv/jetson-containers
 https://forums.developer.nvidia.com/t/looking-for-a-pre-built-wheel-for-pytorch-for-jetson-nano/324816/3
 
 
+# UR10________________________________________
+https://pypi.org/project/ur-rtde/
+pip install ur-rtde
 
 
