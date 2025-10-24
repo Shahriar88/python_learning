@@ -222,5 +222,10 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
 
 
 
+# Jetson ________________________________________________
+https://github.com/dusty-nv/jetson-containers
+https://forums.developer.nvidia.com/t/looking-for-a-pre-built-wheel-for-pytorch-for-jetson-nano/324816/3
+
+
 
 
