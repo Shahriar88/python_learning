@@ -232,3 +232,12 @@ https://pypi.org/project/ur-rtde/
 pip install ur-rtde
 
 
+
+
+# Clone Environment __________________________________________
+# from the working env
+conda activate IR
+conda env export --no-builds > IR.yml
+
+# on the new machine/env
+conda env create -f IR.yml -n IR_NEW
