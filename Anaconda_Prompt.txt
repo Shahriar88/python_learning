@@ -286,6 +286,12 @@ conda clean -y --all
 conda install -y pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 python -c "import torch; print('OK torch', torch.__version__, 'CUDA?', torch.cuda.is_available(), 'device count', torch.cuda.device_count())"
 
+if Conda fails, try pip _________________
+conda activate div2k
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+
+
 
 
 
