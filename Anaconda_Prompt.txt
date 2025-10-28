@@ -74,9 +74,9 @@ conda config --show pinned_packages
 conda config --remove pinned_packages "python=3.13"
 
 # Try installing again; the solver will likely choose Python 3.12
-conda install pytorch torchvision torchaudio cpuonly -c pytorch
+conda install pytorch torchvision torchaudio cpuonly -c pytorch -y
 # or for GPU:
-conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
 
 install important libraries:_________________________________________________________
 
@@ -255,6 +255,7 @@ conda env create -f IR.yml -n IR_NEW
 # Force install wheel______________________________________________________________
 unzip - l Toolbox-1.0.0-py3-none-any.whl
 pip install Toolbox-1.0.0-py3-none-any.whl --no-deps --force-reinstall --ignore-requires-python
+
 
 
 
