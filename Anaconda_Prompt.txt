@@ -9,7 +9,7 @@ pip install ion-python==1.8.10
 
 Option A (recommended): use Python 3.12 _______________________________________________________________
 
-# 0) Remove Old env on Python 3.13
+# 0) Remove/Delete Old env on Python 3.13 (One environment at a time)
 conda env remove --name RF_Lunar_Land
 
 # 1) New env on Python 3.12
@@ -246,4 +246,5 @@ conda env create -f IR.yml -n IR_NEW
 # Force install wheel______________________________________________________________
 unzip - l Toolbox-1.0.0-py3-none-any.whl
 pip install Toolbox-1.0.0-py3-none-any.whl --no-deps --force-reinstall --ignore-requires-python
+
 
