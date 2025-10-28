@@ -257,6 +257,40 @@ unzip - l Toolbox-1.0.0-py3-none-any.whl
 pip install Toolbox-1.0.0-py3-none-any.whl --no-deps --force-reinstall --ignore-requires-python
 
 
+# Troubleshoot__________________________________________________________________
+
+1. ImportError: DLL load failed while importing _C: The operating system cannot run %1.________________________________________________________
+That Windows error means PyTorch’s native C/C++ extension (torch._C) couldn’t load—usually a mismatched/corrupt 
+install or missing DLLs. Here’s the fastest way to fix it in your div2k conda env.
+
+Quickest fix paths
+(suppose your envisronment is div2k)....
+Option A — CPU-only (simplest, no CUDA needed)_____________
+conda activate div2k
+pip uninstall -y torch torchvision torchaudio
+conda remove -y pytorch torchvision torchaudio pytorch-cuda cudatoolkit
+conda clean -y --all
+
+conda install -y pytorch torchvision torchaudio cpuonly -c pytorch
+python -c "import torch; print('OK torch', torch.__version__, 'CUDA?', torch.cuda.is_available())"
+
+
+Option B — GPU (CUDA 12.1 recommended for Windows)__________
+
+Prereqs: recent NVIDIA driver (≥ 531), don’t mix pip & conda for PyTorch/CUDA.
+conda activate div2k
+pip uninstall -y torch torchvision torchaudio
+conda remove -y pytorch torchvision torchaudio pytorch-cuda cudatoolkit
+conda clean -y --all
+
+conda install -y pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+python -c "import torch; print('OK torch', torch.__version__, 'CUDA?', torch.cuda.is_available(), 'device count', torch.cuda.device_count())"
+
+
+
+
+
+
 
 
 
