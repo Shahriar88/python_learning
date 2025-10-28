@@ -1,6 +1,9 @@
 # Update Conda, setuptools ________________________________________________________________________________________
 conda update -n base -c defaults conda
+
 pip install -U pip setuptools wheel
+or
+python.exe -m pip install -U pip setuptools wheel
 
 pip install -U pip
 pip install opencv-python
@@ -246,5 +249,6 @@ conda env create -f IR.yml -n IR_NEW
 # Force install wheel______________________________________________________________
 unzip - l Toolbox-1.0.0-py3-none-any.whl
 pip install Toolbox-1.0.0-py3-none-any.whl --no-deps --force-reinstall --ignore-requires-python
+
 
 
