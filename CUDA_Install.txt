@@ -1,0 +1,41 @@
+
+NVIDIA-smi
+
+conda update -n base -c defaults conda
+
+python.exe -m pip install -U pip setuptools wheel
+
+
+pip install -U pip
+
+
+conda create -n rf python=3.12 -y
+
+
+conda activate rf
+
+
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
+or
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+
+
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib -y
+
+conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc -y
+
+
+
+pip install "gymnasium"
+
+
+
+
+**************
+conda activate rf
+jupyter notebook
+spyder
+
+torch.cuda.is_available()
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
