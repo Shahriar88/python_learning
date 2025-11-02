@@ -13,18 +13,15 @@ conda create -n rf python=3.12 -y
 
 
 conda activate rf
-
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib -y
 
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 or
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-
-
-conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib -y
+pip install tqdm ipywidgets jupyterlab_widgets
 
 conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc -y
-
 
 
 pip install "gymnasium"
@@ -39,3 +36,4 @@ spyder
 
 torch.cuda.is_available()
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
