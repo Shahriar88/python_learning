@@ -84,6 +84,40 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 
 
 
+# Same file different parameters **************************************
+# Run multiple notebooks (even the same one) with different parameters using Papermill.
 
 
+# --- Configuration ---
+NOTEBOOKS = {
+    "V1.0_Lipschitz_3ch.ipynb": [
+        {"run_name": "Lipschitz_3ch", "in_ch": 3},
+        {"run_name": "Lipschitz_6ch", "in_ch": 6},
+    ],
+    "V1.0_RedPlat_3ch.ipynb": [
+        {"run_name": "RedPlat_3ch", "in_ch": 3},
+        {"run_name": "RedPlat_6ch", "in_ch": 6},
+    ]
+}
 
+output_dir = Path("executed_notebooks")
+output_dir.mkdir(exist_ok=True)
+
+
+# --- Run sequence ---
+print(f"=== Run started {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+for nb, runs in NOTEBOOKS.items():
+    for params in runs:
+        run_name = params["run_name"]
+        output_path = output_dir / f"{Path(nb).stem}_{run_name}-executed.ipynb"
+
+        print(f"\n▶ Running {nb} ({run_name}) ...")
+        pm.execute_notebook(
+            nb,
+            output_path,
+            parameters=params,
+            kernel_name=None,   # or "python3"
+            progress_bar=True
+        )
+        print(f"✅ Done: {output_path}")
+print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
