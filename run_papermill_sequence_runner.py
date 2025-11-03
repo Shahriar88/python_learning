@@ -27,6 +27,8 @@ import papermill as pm
 from datetime import datetime
 from pathlib import Path
 
+#%%
+# Direct run ipynb file **********************************************************
 NOTEBOOKS = [
     "V1.0_Lipschitz_3ch.ipynb",
     "V1.0_Lipschitz_6ch.ipynb",
@@ -56,12 +58,15 @@ for nb in NOTEBOOKS:
 print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
 
 
+#________________________________________________________________________________________________________________________________
+#%%
 
 
 
 
 
 
+#%%
 # Example — passing different params per notebook *************************************************
 NOTEBOOKS = {
     "V1.0_Lipschitz_3ch.ipynb": {"run_name": "Lipschitz_3ch", "in_ch": 3},
@@ -85,6 +90,8 @@ for nb, params in NOTEBOOKS.items():
     )
     print(f"✅ Done: {output_path}")
 print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+#________________________________________________________________________________________________________________________________
+#%%
 
 
 
@@ -94,7 +101,7 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 
 
 
-
+#%%
 # Same file different parameters **************************************
 # Run multiple notebooks (even the same one) with different parameters using Papermill.
 
@@ -132,4 +139,7 @@ for nb, runs in NOTEBOOKS.items():
         )
         print(f"✅ Done: {output_path}")
 print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+#________________________________________________________________________________________________________________________________
+#%%
+
 
