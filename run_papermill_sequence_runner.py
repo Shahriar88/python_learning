@@ -143,3 +143,73 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 #%%
 
 
+
+
+
+
+
+
+
+
+
+
+
+#%%
+# Error proof version, error in one, will not stop executing others **********************************************************
+# -*- coding: utf-8 -*-
+"""
+Run multiple notebooks safely with Papermill
+- continues even if one notebook fails
+"""
+
+import papermill as pm
+from datetime import datetime
+from pathlib import Path
+import traceback
+
+NOTEBOOKS = {
+    "V1.0_Lipschitz_3ch.ipynb": [
+        {"run_name": "Lipschitz_3ch", "in_ch": 3},
+        {"run_name": "Lipschitz_6ch", "in_ch": 6},
+    ],
+    "V1.0_RedPlat_3ch.ipynb": [
+        {"run_name": "RedPlat_3ch", "in_ch": 3},
+        {"run_name": "RedPlat_6ch", "in_ch": 6},
+    ]
+}
+
+output_dir = Path("executed_notebooks")
+output_dir.mkdir(exist_ok=True)
+
+print(f"=== Run started {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+
+for nb, runs in NOTEBOOKS.items():
+    for params in runs:
+        run_name = params["run_name"]
+        output_path = output_dir / f"{Path(nb).stem}_{run_name}-executed.ipynb"
+
+        print(f"\n▶ Running {nb} ({run_name}) ...")
+        try:
+            pm.execute_notebook(
+                nb,
+                output_path,
+                parameters=params,
+                kernel_name=None,  # or "python3"
+                progress_bar=True
+            )
+            print(f"✅ Done: {output_path}")
+
+        except Exception as e:
+            print(f"❌ Error while running {nb} ({run_name})")
+            traceback.print_exc()  # shows detailed error in console
+            with open("papermill_errors.log", "a") as logf:
+                logf.write(f"\n[{datetime.now():%Y-%m-%d %H:%M:%S}] {nb} ({run_name}) failed:\n")
+                traceback.print_exc(file=logf)
+            continue  # move on to next notebook
+
+print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+
+#________________________________________________________________________________________________________________________________
+#%%
+
+
