@@ -6,8 +6,8 @@ Created on Sun Nov  2 21:46:22 2025
 
 ❌ Papermill only works with Jupyter notebooks (.ipynb), not plain Python .py scripts.
 
-If you want to input arguments then add first code cell like this:
 
+If you want to input arguments then add first code cell like this:
 # Parameters
 run_name = "default_run"
 batch_size = 8
@@ -160,6 +160,16 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 """
 Run multiple notebooks safely with Papermill
 - continues even if one notebook fails
+
+
+If you want to input arguments then add first code cell like this:
+# Parameters
+run_name = "default_run"
+batch_size = 8
+epochs = 100
+scheduler_option = 4
+learning_rate = 1e-3
+
 """
 
 import papermill as pm
@@ -211,5 +221,6 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 
 #________________________________________________________________________________________________________________________________
 #%%
+
 
 
