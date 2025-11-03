@@ -2,7 +2,9 @@
 """
 Created on Sun Nov  2 21:46:22 2025
 
-@author: kec994
+@author: Shahriar The Great
+
+❌ Papermill only works with Jupyter notebooks (.ipynb), not plain Python .py scripts.
 
 pip install papermill
 python run_papermill_sequence_runner.py
@@ -40,3 +42,4 @@ for nb in NOTEBOOKS:
     print(f"✅ Done: {output_path}")
 
 print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ===")
+
