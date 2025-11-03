@@ -13,7 +13,7 @@ conda create -n rf python=3.12 -y
 
 
 conda activate rf
-conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib -y
+
 
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 or
@@ -23,10 +23,18 @@ pip install tqdm ipywidgets jupyterlab_widgets
 
 conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc -y
 
-pip install papermill #python run_papermill.py
+#python run_papermill.py
+pip install papermill 
 
+pip install opencv-python
 
 pip install "gymnasium"
+
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+
+
+
 
 
 
@@ -58,5 +66,6 @@ conda env export --no-builds > rf.yml
 
 # on the new machine/env
 conda env create -f rf.yml -n rf_NEW
+
 
 
