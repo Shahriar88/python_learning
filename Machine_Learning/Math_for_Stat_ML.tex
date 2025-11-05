@@ -1,0 +1,427 @@
+\UseRawInputEncoding
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.2em}
+\usepackage{bm}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{xcolor}
+\definecolor{salmon}{RGB}{250,128,114}
+\usepackage{makeidx}
+\makeindex
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+
+% NEW: for code blocks
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  breaklines=true,
+  frame=single,
+  framerule=0.4pt,
+  keywordstyle=\bfseries,
+  showstringspaces=false
+}
+
+\begin{document}
+
+\title{Core Math for ML/Stats (PCA, SPCA, PLS, Tensor Algebra)}
+\author{}
+\date{}
+\maketitle
+
+% ---- Front matter ----
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\cleardoublepage
+\pagenumbering{arabic}
+% ----------------------
+
+\section{Notation \& Symbols (with Examples)\index{notation}\index{symbols}}
+Unless stated, vectors are bold lowercase ($\mathbf{x}$), matrices bold uppercase ($\mathbf{X}$), tensors calligraphic ($\mathcal{X}$)\index{tensor}\index{matrix}\index{vector}.
+
+\subsection*{Linear algebra \& tensor operators\index{linear algebra}\index{tensor algebra}}
+\begin{table}[h!]
+\centering
+\renewcommand\arraystretch{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{4cm} X}
+\toprule
+\textbf{Symbol} & \textbf{Name} & \textbf{Description \& Example} \\
+\midrule
+$\mathrm{vec}(A)$ & Vectorization\index{vectorization@\texttt{vec} (vectorization)} & Stacks entries of $A$ column-wise into a single column vector. Example: $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}\Rightarrow \mathrm{vec}(A)=[1,3,2,4]^\top$. \\[2pt]
+$\odot$ & Khatri--Rao product\index{Khatri--Rao product} & Column-wise Kronecker: if $A\in\mathbb{R}^{m\times k}, B\in\mathbb{R}^{n\times k}$, then $A\odot B\in\mathbb{R}^{mn\times k}$ with $(A\odot B)_{:,j}=A_{:,j}\otimes B_{:,j}$. Example with $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}$, $B=\begin{bmatrix}5&6\\7&8\end{bmatrix}$: $A\odot B=\begin{bmatrix}5&12\\7&16\\15&24\\21&32\end{bmatrix}$. \\[2pt]
+$\otimes$ & Kronecker product\index{Kronecker product} & Full expansion: $(A\otimes B)=(a_{ij}B)_{ij}$. Example: $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}$, $B=\begin{bmatrix}0&5\\6&7\end{bmatrix}$, then $A\otimes B=\begin{bmatrix}0&5&0&10\\6&7&12&14\\0&15&0&20\\18&21&24&28\end{bmatrix}$. \\[2pt]
+$\circ$ & Hadamard product\index{Hadamard product} & Elementwise product: $(A\circ B)_{ij}=A_{ij}B_{ij}$. Example: $\begin{bmatrix}1&2\\3&4\end{bmatrix}\circ\begin{bmatrix}10&20\\30&40\end{bmatrix}=\begin{bmatrix}10&40\\90&160\end{bmatrix}$. \\[2pt]
+$\langle A,B\rangle$ & Inner product\index{inner product}\index{trace} & Sum of elementwise products: $\langle A,B\rangle=\sum_{ij}A_{ij}B_{ij}=\mathrm{tr}(A^\top B)$. Example with $A,B$ above: $\langle A,B\rangle=70$. \\[2pt]
+$\|\cdot\|_F$ & Frobenius norm\index{Frobenius norm} & $\|A\|_F=\sqrt{\sum_{ij}A_{ij}^2}=\sqrt{\langle A,A\rangle}$. Example: $\big\|\begin{bmatrix}1&2\\3&4\end{bmatrix}\big\|_F=\sqrt{30}$. \\[2pt]
+$\mathbf{1}_k$ & Vector of ones\index{vector of ones@\boldmath$\mathbf{1}_k$ (vector of ones)} & $\mathbf{1}_k=[1,\dots,1]^\top\in\mathbb{R}^k$. Used to sum/aggregate columns: $M\mathbf{1}_k$ yields row sums of $M$. \\[2pt]
+\bottomrule
+\end{tabularx}
+\caption{Frequently used operators with concrete examples.}
+\end{table}
+
+\paragraph{Useful identities.\index{vectorization identity}\index{Gram matrix}\index{Hadamard identity}}
+$\mathrm{vec}(AXB)=(B^\top\otimes A)\mathrm{vec}(X)$,\quad
+$(A\odot B)^\top(A\odot B)=(A^\top A)\circ(B^\top B)$.
+
+\subsection*{Extra numeric examples (quick check)\index{examples!numeric}}
+\begin{itemize}
+\item \textbf{Inner/Frobenius:} With $A,B$ as above, $\langle A,B\rangle=70$, $\|A\|_F=\sqrt{30}$.
+\item \textbf{Aggregation with $\mathbf{1}_k$:} If $M=\begin{bmatrix}1&2&3\\4&5&6\end{bmatrix}$, $M\mathbf{1}_3=\begin{bmatrix}6\\15\end{bmatrix}$ (row sums). Not a cumulative sum\index{cumulative sum@\emph{not} cumulative}.
+\end{itemize}
+
+\section{Core Statistical Building Blocks\index{statistics!core}}
+\subsection{Mean and variance\index{mean}\index{variance}}
+\[
+\mu=\frac{1}{n}\sum_{i=1}^n x_i,\qquad \mathrm{Var}(X)=\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2.
+\]
+\textbf{Use:} standardization\index{standardization}, bias--variance analysis\index{bias--variance decomposition}, Gaussian likelihoods\index{Gaussian!likelihood}.
+
+\subsection{Gaussian density\index{Gaussian!density}\index{normal distribution}}
+\vspace{-0.3em}
+\[
+p(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\]
+\textbf{Use:} regression noise models, generative modeling\index{generative modeling}, conjugacy\index{conjugacy}.
+
+\subsection{Bayes' rule\index{Bayes' rule}\index{posterior}\index{prior}}
+\vspace{-0.3em}
+\[
+p(y\mid x)=\frac{p(x\mid y)p(y)}{p(x)}.
+\]
+\textbf{Use:} naive Bayes\index{naive Bayes}, Bayesian regression\index{Bayesian regression}, probabilistic inference\index{inference}.
+
+\section{Supervised Learning: Models, Losses, Optimizers\index{supervised learning}}
+\subsection{Linear regression (OLS / Ridge / Lasso)\index{linear regression}\index{ordinary least squares@OLS (ordinary least squares)}\index{ridge regression}\index{lasso}}
+Model: $\mathbf{y}=\mathbf{X}\beta+\varepsilon$, loss $L(\beta)=\tfrac{1}{n}\|\mathbf{y}-\mathbf{X}\beta\|_2^2$.
+Closed-form OLS: $\hat\beta=(X^\top X)^{-1}X^\top y$ (if full rank\index{full rank}).
+\[
+\text{Ridge: }L=\tfrac{1}{n}\|y-Xw\|_2^2+\lambda\|w\|_2^2,\qquad
+\text{Lasso: }L=\tfrac{1}{n}\|y-Xw\|_2^2+\lambda\|w\|_1.
+\]
+\textbf{Task:} regression. \textbf{Notes:} multicollinearity\index{multicollinearity}; sparsity\index{sparsity}.
+
+\subsection{Logistic regression (binary) \& Softmax (multi-class)\index{logistic regression}\index{softmax}\index{cross-entropy}}
+Sigmoid\index{sigmoid}: $\sigma(z)=\frac{1}{1+e^{-z}}$, probability $\hat p(y{=}1\mid x)=\sigma(x^\top w+b)$.\\
+Cross-entropy loss\index{loss!cross-entropy}:
+\[
+L=-\frac{1}{n}\sum_{i=1}^n\big[y_i\log \hat p_i+(1-y_i)\log(1-\hat p_i)\big].
+\]
+Softmax: $\text{softmax}(z)_k=\frac{e^{z_k}}{\sum_j e^{z_j}}$, multi-class loss $L=-\tfrac{1}{n}\sum_i\log \hat p_{i,y_i}$.
+\textbf{Task:} classification\index{classification}.
+
+\subsection{Gradient-based optimization\index{optimization}\index{gradient descent}\index{Adam}\index{RMSProp}\index{SGD}}
+Update: $\theta_{t+1}=\theta_t-\eta\,\nabla_\theta L(\theta_t)$.\\
+\textbf{Variants:} SGD, momentum\index{momentum}, Adam, RMSProp.
+
+\subsection{Maximum likelihood \& KL\index{maximum likelihood}\index{KL divergence}}
+\[
+\hat\theta=\arg\max_\theta \sum_{i=1}^n \log p(x_i\mid\theta),\qquad
+D_\mathrm{KL}(p\|q)=\sum_x p(x)\log\frac{p(x)}{q(x)}.
+\]
+\textbf{Use:} derive losses; variational inference (VI)\index{variational inference} / VAEs\index{variational autoencoder}.
+
+\subsection{Loss summary\index{loss functions}}
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Loss} & \textbf{Formula} & \textbf{Task} & \textbf{Notes} \\
+\midrule
+MSE\index{MSE} & $\tfrac{1}{n}\sum_i(y_i-\hat y_i)^2$ & Regression & Smooth, sensitive to outliers \\
+MAE\index{MAE} & $\tfrac{1}{n}\sum_i|y_i-\hat y_i|$ & Regression & Robust to outliers \\
+Cross-entropy\index{cross-entropy} & $-\sum_i y_i\log\hat y_i$ & Classification & Likelihood-based \\
+Hinge\index{hinge loss} & $\max(0,1-y_i\hat y_i)$ & Margin cls. (SVM) & Maximizes margin \\
+Huber\index{Huber loss} & piecewise quad./linear & Regression & Robust \& smooth \\
+\bottomrule
+\end{tabular}
+\caption{Common losses and where they’re used.}
+\end{table}
+
+\section{SVM and Neural Networks (Quick)\index{SVM}\index{neural networks}}
+SVM (soft-margin):
+\[
+\min_{w,b}\ \frac{1}{2}\|w\|_2^2+C\sum_i \max(0,1-y_i(w^\top x_i+b)).
+\]
+Neural layer: $h^{(\ell)}=f(W^{(\ell)}h^{(\ell-1)}+b^{(\ell)})$; \textbf{Use:} classification or regression depending on final activation\index{activation function}.
+
+\section{Bias--Variance and Cross-Validation\index{bias--variance decomposition}\index{cross-validation}}
+\[
+\mathbb{E}\big[(\hat f(x)-f(x))^2\big]=\underbrace{(\text{Bias})^2}_{\text{systematic error}}+\underbrace{\text{Var}}_{\text{sensitivity}}+\text{Noise}.
+\]
+$K$-fold CV error $=\frac{1}{K}\sum_{k=1}^K L_k$. \textbf{Use:} model selection\index{model selection} \& hyperparameters\index{hyperparameter tuning}.
+
+\section{PCA, Rank, Eigenvalues: From Matrices to Tensors\index{PCA}\index{rank}\index{eigenvalues}\index{eigenvectors}\index{SVD}}
+\subsection{Rank\index{rank}}
+$\mathrm{rank}(A)$ = \# linearly independent columns (or rows). Determines identifiability of OLS; caps \# nonzero PCs.
+
+\subsection{Eigenvalues/eigenvectors\index{eigenvalues}\index{eigenvectors}}
+$Av=\lambda v$. In PCA, eigenvectors of covariance give principal directions and eigenvalues give explained variance.
+
+\subsection{PCA via covariance and SVD\index{covariance matrix}\index{SVD}}
+With centered $X\in\mathbb{R}^{n\times d}$:
+\[
+\Sigma=\tfrac{1}{n}X^\top X,\qquad \Sigma v_k=\lambda_k v_k.
+\]
+Equivalently SVD: $X=U\Sigma V^\top$; columns of $V$ are PCs and $\Sigma^2/n$ are variances.
+
+\paragraph{Short equivalence note (PCA \texorpdfstring{$\leftrightarrow$}{<->} SVD)\index{PCA!SVD equivalence}}
+$X^\top X = V\Sigma^2 V^\top$ so eigenvectors of the covariance are the right singular vectors of $X$, and eigenvalues are $\sigma_i^2$.
+
+\subsection{Does PCA depend only on $X$?\index{PCA!unsupervised}}
+Yes (standard PCA is unsupervised; depends solely on $X$ via its covariance). Supervised variants below incorporate $y$.
+
+\section{Tensor Algebra and Decompositions\index{tensor algebra}\index{tensor decomposition}}
+\subsection{Tensor regression (example)\index{tensor regression}}
+Scalar response:
+\[
+y_i=\alpha+\left\langle \mathrm{vec}(\tilde{\mathbf{B}}),\mathrm{vec}(\tilde{\mathbf{S}}_i)\right\rangle+\sigma\epsilon_i
+= \alpha+\left\langle(\tilde{B}_3\odot \tilde{B}_2\odot \tilde{B}_1)\mathbf{1}_k,\ \mathrm{vec}(\tilde{S}_i)\right\rangle+\sigma\epsilon_i.
+\]
+$\tilde{B}_1,\tilde{B}_2,\tilde{B}_3$ are factor matrices; $\odot$ aligns columns across modes; $\mathbf{1}_k$ aggregates $k$ rank-1 components.
+
+\subsection{HOSVD / Tucker (Tensor PCA)\index{HOSVD}\index{Tucker decomposition}\index{tensor PCA}}
+\[
+\mathcal{X}\approx \mathcal{G}\times_1 U_1\times_2 U_2\times_3 U_3,\qquad
+X_{(n)}=U_n S_n\Big(\bigotimes_{m\neq n}U_m\Big)^\top.
+\]
+Kronecker ($\otimes$) ties other-mode bases in matricized form.
+
+\subsection{CP/PARAFAC\index{CP decomposition}\index{PARAFAC}}
+\[
+\mathcal{X}\approx \sum_{r=1}^R a_r\circ b_r\circ c_r,\qquad
+\mathrm{vec}(\mathcal{X})\approx (C\odot B\odot A)\,\mathbf{1}_R.
+\]
+\textbf{Use:} compact multiway factorization; $\odot$ is the natural column-aligned expansion.
+
+\subsection{Where the products appear\index{Kronecker product}\index{Khatri--Rao product}\index{Hadamard product}}
+\begin{itemize}
+  \item \textbf{Kronecker $\otimes$:} separable covariances ($\Sigma_t\otimes\Sigma_s$), matrix-variate normals, vectorization identities $\mathrm{vec}(AXB)=(B^\top\otimes A)\mathrm{vec}(X)$.
+  \item \textbf{Khatri--Rao $\odot$:} CP/Tucker updates, tensor regression design matrices, feature interaction with aligned ranks.
+  \item \textbf{Hadamard $\circ$:} elementwise weighting, covariance identities, attention masks.
+\end{itemize}
+
+\section{How-To: Khatri--Rao and \texorpdfstring{$\mathbf{1}_k$}{1k}\index{Khatri--Rao product}\index{vector of ones@\boldmath$\mathbf{1}_k$}}
+\subsection{Khatri--Rao step-by-step (column-wise Kronecker)}
+Let $A=[a_1\,a_2\,\dots a_K]\in\mathbb{R}^{I\times K}$, $B=[b_1\,b_2\,\dots b_K]\in\mathbb{R}^{J\times K}$.
+\[
+A\odot B=\big[\,a_1\otimes b_1\;\; a_2\otimes b_2\;\; \dots\;\; a_K\otimes b_K\,\big]\in\mathbb{R}^{(IJ)\times K}.
+\]
+\textbf{Example:} $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}$, $B=\begin{bmatrix}5&6\\7&8\end{bmatrix}$:
+\[
+(A\odot B)_{:,1}=\begin{bmatrix}1\\3\end{bmatrix}\otimes\begin{bmatrix}5\\7\end{bmatrix}=
+\begin{bmatrix}5\\7\\15\\21\end{bmatrix},\quad
+(A\odot B)_{:,2}=\begin{bmatrix}2\\4\end{bmatrix}\otimes\begin{bmatrix}6\\8\end{bmatrix}=
+\begin{bmatrix}12\\16\\24\\32\end{bmatrix}.
+\]
+
+\subsection{What \texorpdfstring{$\mathbf{1}_k$}{1k} does (not cumulative)}
+$\mathbf{1}_k$ is a column of ones used to \emph{sum} components, not to produce cumulative sums.
+If $Z=[z_1\,\dots z_K]$ collects $K$ rank-1 terms,
+then $Z\mathbf{1}_k=\sum_{j=1}^K z_j$ (aggregation). For tensors, $(C\odot B\odot A)\mathbf{1}_K$ sums rank-$1$ parts into a single vector.
+
+\section{Supervised PCA (SPCA) and Partial Least Squares (PLS)\index{SPCA}\index{PLS}}
+\subsection{Supervised PCA (SPCA)}
+Find directions $v$ in $X$ that correlate with $y$:
+\[
+v=\arg\max_{\|v\|=1}\ \mathrm{Cov}^2(Xv,y).
+\]
+A common formulation solves the eigenproblem on
+\[
+C=X^\top yy^\top X \quad (\text{or }X^\top YY^\top X\text{ for multi-response}),
+\qquad C v=\lambda v.
+\]
+\textbf{Use:} supervised dimensionality reduction when only components predictive of $y$ are desired. For classification, let $Y$ be one-hot labels.
+
+\subsection{Partial Least Squares (PLS)}
+Find paired latent scores $(t,u)$ with $t=Xw,\ u=yq$ maximizing covariance:
+\[
+\max_{w,q}\ \mathrm{Cov}^2(Xw,yq),\quad \text{with orthogonality across components}.
+\]
+One PLS1 iteration (single response):
+\[
+w\propto X^\top y,\quad t=Xw,\quad
+q=\frac{y^\top t}{t^\top t},\quad
+p=\frac{X^\top t}{t^\top t},\quad
+X\leftarrow X-tp^\top,\ y\leftarrow y-tq.
+\]
+Final regression: $\hat y = X W (P^\top W)^{-1}Q^\top$.\\
+\textbf{Use:} high-dimensional regression where predictors are collinear; chemometrics\index{chemometrics}, genomics\index{genomics}.
+
+\subsection{PCA vs SPCA vs PLS (at a glance)\index{PCA!vs SPCA vs PLS}}
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+Method & Uses $y$? & Objective & Output & Typical Task \\
+\midrule
+PCA & No & $\max_v \mathrm{Var}(Xv)$ & Unsupervised PCs & Compression/denoising \\
+SPCA & Yes & $\max_v \mathrm{Cov}^2(Xv,y)$ & Supervised PCs & Predictive features \\
+PLS & Yes & $\max_{w,q}\mathrm{Cov}^2(Xw,yq)$ & Latent scores $(t,u)$ & Regression \\
+\bottomrule
+\end{tabular}
+\caption{Supervised vs. unsupervised component methods.}
+\end{table}
+
+\section{Task Map: Where Each Equation is Used\index{task map}}
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Equation/Concept} & \textbf{Primary Use} & \textbf{Notes} \\
+\midrule
+Linear regression (OLS/Ridge/Lasso) & Regression & L2 for stability, L1 for sparsity \\
+Logistic/Softmax + Cross-Entropy & Classification & Probabilistic interpretation \\
+MLE / Log-likelihood & Estimation & Derives many learning objectives \\
+KL divergence & Regularization / VI & Distance between distributions \\
+PCA (SVD) & Unsupervised DR & Depends only on $X$ \\
+SPCA / PLS & Supervised DR & Aligns components with $y$ \\
+SVM (hinge) & Classification & Margin maximization \\
+Gradient descent/Adam & Optimization & Ubiquitous in deep learning \\
+Kronecker $\otimes$ & Multiway lin. maps, covariances & Separable structures \\
+Khatri--Rao $\odot$ & Tensor decompositions & Column-aligned Kronecker \\
+Hadamard $\circ$ & Elementwise modeling & Masks/weights, covariance algebra \\
+\bottomrule
+\end{tabular}
+\caption{Quick map from math objects to ML tasks.}
+\end{table}
+
+\section{Identities Reference (handy)\index{identities}}
+\begin{table}[h!]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Identity & Comment \\
+\midrule
+$\mathrm{vec}(AXB)=(B^\top\otimes A)\mathrm{vec}(X)$ & Vectorization + Kronecker \\
+$(A\odot B)^\top(A\odot B)=(A^\top A)\circ(B^\top B)$ & Appears in CP/ALS updates \\
+$\|A\|_F^2=\langle A,A\rangle=\mathrm{tr}(A^\top A)$ & Frobenius norm \\
+$X^\top X=V\Sigma^2 V^\top$ (SVD of $X$) & PCA–SVD equivalence \\
+\bottomrule
+\end{tabular}
+\caption{Frequently used algebraic identities.}
+\end{table}
+
+\section{Mini Worked Examples (Hand-Check Size)\index{examples}}
+\subsection{Khatri--Rao and $\mathbf{1}_k$ aggregation\index{Khatri--Rao product}\index{vector of ones@\boldmath$\mathbf{1}_k$}}
+Let $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}$, $B=\begin{bmatrix}5&6\\7&8\end{bmatrix}$.
+Then $A\odot B=\begin{bmatrix}5&12\\7&16\\15&24\\21&32\end{bmatrix}$.
+If each column is a rank-1 component, multiplying by $\mathbf{1}_2$ sums the two components:
+$(A\odot B)\mathbf{1}_2=\begin{bmatrix}17\\23\\39\\53\end{bmatrix}$.
+
+\subsection{PCA via SVD\index{PCA}\index{SVD}}
+Centered $X=U\Sigma V^\top$. The top $k$ principal directions are columns of $V_{:,1\ldots k}$; the projected scores are $Z=XV_{:,1\ldots k}=U_{:,1\ldots k}\Sigma_{1\ldots k}$.
+
+\subsection{SPCA toy intuition\index{SPCA}}
+If $y$ varies mainly with a subset of features, $X^\top yy^\top X$ emphasizes those directions even when overall variance in $X$ is driven by others.
+
+\section{Appendix: Python Snippets (shapes-first)\index{Python code}}
+\noindent The following compact demo reproduces our session’s computations (rank, PCA, SPCA, PLS, Kronecker, Khatri--Rao, Hadamard, plus vec/inner/Frobenius). Center $X$ (and $y$) for PCA/SPCA/PLS.
+\begin{lstlisting}[language=Python]
+import numpy as np
+from numpy.linalg import matrix_rank, lstsq, norm
+from sklearn.decomposition import PCA
+from sklearn.cross_decomposition import PLSRegression
+
+# OPTIONAL: SciPy for Khatri–Rao (fallback to manual if unavailable)
+try:
+    from scipy.linalg import khatri_rao as scipy_khatri_rao
+    HAS_SCIPY = True
+except Exception:
+    HAS_SCIPY = False
+
+# ---------- Toy data ----------
+X = np.array([
+    [0.0,  1.0,  2.0],
+    [1.0,  2.0,  3.0],
+    [2.0,  3.0,  4.0],
+    [3.0,  4.0,  5.0],
+])
+y = np.array([1.0, 3.0, 5.0, 7.0])
+
+A = np.array([[1, 2],
+              [3, 4]])
+B = np.array([[5, 6],
+              [7, 8]])
+
+# ---------- Rank ----------
+print("rank(A) =", matrix_rank(A), " | rank(X) =", matrix_rank(X))
+
+# ---------- PCA (unsupervised; depends only on X) ----------
+Xc = X - X.mean(axis=0, keepdims=True)
+pca = PCA(n_components=2)
+Z_pca = pca.fit_transform(Xc)    # scores (n x k)
+V_pca = pca.components_.T        # loadings (d x k)
+print("\nPCA loadings V:\n", V_pca)
+print("PCA scores Z:\n", Z_pca)
+print("PCA explained variances:", pca.explained_variance_)
+
+# ---------- SPCA (simple eigen formulation) ----------
+yc = y - y.mean()
+C_spca = Xc.T @ np.outer(yc, yc) @ Xc          # d x d
+evals, evecs = np.linalg.eigh(C_spca)          # symmetric eig
+idx = np.argsort(evals)[::-1]
+V_spca = evecs[:, idx[:2]]
+Z_spca = Xc @ V_spca
+print("\nSPCA directions:\n", V_spca)
+print("SPCA scores:\n", Z_spca)
+
+# ---------- PLS (supervised; maximizes covariance with y) ----------
+pls = PLSRegression(n_components=2)
+T_pls, U_pls = pls.fit_transform(Xc, yc)
+print("\nPLS X-scores T:\n", T_pls)
+print("PLS Y-scores U:\n", U_pls)
+print("PLS X-weights W:\n", pls.x_weights_)
+
+# ---------- Least Squares (OLS) ----------
+beta, residuals, rank, svals = lstsq(X, y, rcond=None)
+print("\nOLS beta:\n", beta)
+print("OLS residual sum of squares:", residuals.sum() if residuals.size else 0.0)
+
+# ---------- Kronecker, Khatri–Rao, Hadamard ----------
+kron_AB = np.kron(A, B)
+print("\nKronecker A ⊗ B:\n", kron_AB)
+
+def khatri_rao(A, B):
+    m, k1 = A.shape
+    n, k2 = B.shape
+    assert k1 == k2
+    out = np.zeros((m*n, k1), dtype=np.result_type(A, B))
+    for k in range(k1):
+        out[:, k] = np.kron(A[:, k], B[:, k])
+    return out
+
+A2 = np.array([[1, 2],
+               [3, 4]])
+B2 = np.array([[5, 6],
+               [7, 8]])
+KR = scipy_khatri_rao(A2, B2) if HAS_SCIPY else khatri_rao(A2, B2)
+print("\nKhatri–Rao A ⊙ B:\n", KR)
+
+H = A * B
+print("\nHadamard A ∘ B:\n", H)
+
+# ---------- vec, inner product, Frobenius, ones ----------
+vecA_col_major = A.reshape(-1, order='F')     # vec in column-major sense
+inner_AB = np.tensordot(A, B, axes=2)
+froA = norm(A, 'fro')
+ones2 = np.ones((2, 1))
+print("\nvec(A) (col-major):", vecA_col_major)
+print("⟨A,B⟩ =", inner_AB, " == tr(A^T B)")
+print("||A||_F =", froA)
+print("1_k (k=2):\n", ones2)
+\end{lstlisting}
+
+\clearpage
+\printindex
+
+\end{document}
