@@ -25,6 +25,8 @@ conda install -c conda-forge numba "cuda-version=12.4" cuda-nvrtc cuda-nvcc -y
 
 #python run_papermill.py
 pip install papermill 
+pip install optuna
+
 
 pip install opencv-python
 
@@ -66,6 +68,7 @@ conda env export --no-builds > rf.yml
 
 # on the new machine/env
 conda env create -f rf.yml -n rf_NEW
+
 
 
 
