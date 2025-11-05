@@ -2,7 +2,7 @@ import nbformat
 from nbconvert import PythonExporter
 
 
-name = 'V1.0_BasicCode_papermill'
+name = 'V1_0_BasicCode_papermill'
 nb_name = f'{name}.ipynb'
 py_name = nb_name.replace(".ipynb", ".py")
 
