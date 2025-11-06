@@ -123,12 +123,57 @@ Softmax: $\text{softmax}(z)_k=\frac{e^{z_k}}{\sum_j e^{z_j}}$, multi-class loss 
 Update: $\theta_{t+1}=\theta_t-\eta\,\nabla_\theta L(\theta_t)$.\\
 \textbf{Variants:} SGD, momentum\index{momentum}, Adam, RMSProp.
 
-\subsection{Maximum likelihood \& KL\index{maximum likelihood}\index{KL divergence}}
+\subsection{Maximum Likelihood \& Kullback--Leibler Divergence\index{maximum likelihood}\index{KL divergence}}
+
 \[
-\hat\theta=\arg\max_\theta \sum_{i=1}^n \log p(x_i\mid\theta),\qquad
-D_\mathrm{KL}(p\|q)=\sum_x p(x)\log\frac{p(x)}{q(x)}.
+\hat\theta = \arg\max_\theta \sum_{i=1}^n \log p(x_i \mid \theta),
+\qquad
+D_\mathrm{KL}(p\|q) = \sum_x p(x) \log \frac{p(x)}{q(x)}.
 \]
-\textbf{Use:} derive losses; variational inference (VI)\index{variational inference} / VAEs\index{variational autoencoder}.
+
+\textbf{Use:} derive losses; variational inference (VI)\index{variational inference} / variational autoencoders (VAEs)\index{variational autoencoder}.
+
+\bigskip
+
+The Kullback--Leibler divergence measures how one probability distribution diverges from another.
+For distributions \(p\) and \(q\), it is defined as:
+
+\[
+D_{KL}(p \,\|\, q)
+= \mathbb{E}_{x \sim p(x)} \left[ \log \frac{p(x)}{q(x)} \right].
+\]
+
+The double vertical bar ``\|'' denotes \emph{divergence from ... to ...}, that is, it separates the two probability
+distributions being compared.
+
+\paragraph{In Variational Autoencoders (VAEs).}
+A key quantity in VAEs is:
+\[
+D_{KL}(q(z|x) \,\|\, p(z)),
+\]
+read as \emph{``the Kullback--Leibler divergence of \( q(z|x) \) relative to \( p(z) \)''}.
+
+It measures how much the encoder's posterior distribution \( q(z|x) \) differs from the prior \( p(z) \).
+
+\begin{itemize}
+  \item \( q(z|x) \): the encoder’s posterior (distribution of latent variables given an input \(x\));
+  \item \( p(z) \): the prior distribution, usually a standard normal \( \mathcal{N}(0, I) \).
+\end{itemize}
+
+Minimizing this divergence encourages the latent space to follow the standard normal prior, resulting in a smoother,
+more continuous latent representation.
+
+\paragraph{Intuition.}
+\[
+D_{KL}(q(z|x)\,\|\,p(z))
+= \text{how much information is lost when } p(z)
+\text{ is used to approximate } q(z|x).
+\]
+
+In words:
+\begin{quote}
+Minimizing \( D_{KL} \) makes the encoder’s latent distribution \( q(z|x) \) behave more like the prior \( p(z) \).
+\end{quote}
 
 \subsection{Loss summary\index{loss functions}}
 \begin{table}[h!]
