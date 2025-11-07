@@ -70,5 +70,10 @@ conda env export --no-builds > rf.yml
 conda env create -f rf.yml -n rf_NEW
 
 
+******************************************************************
+Verify the current state of torch:________________________________
+print(model.training)
+print(torch.is_grad_enabled())
+print(torch.is_inference_mode_enabled())
 
 
