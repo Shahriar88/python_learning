@@ -320,3 +320,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
 
 
 
+# Check function parameters ****************************************************************
+print(create_model)                       # where is it from?
+import inspect
+print(inspect.signature(create_model))    # what params does it accept?
+#_______________________________________________________________________________
+
