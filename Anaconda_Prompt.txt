@@ -294,9 +294,15 @@ pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchau
 
 
 
+# Troubleshoot Error _____________________________________________________________
+# InternalTorchDynamoError: RuntimeError: Compiler: cl.exe is not found.
 
+Solution 1: 
+use_amp = False
+scaler = amp.GradScaler('cuda', enabled=use_amp)
 
-
+Solution 2:
+Install Microsoft Visual C++ distribution (see C++Distribution.png)
 
 
 
