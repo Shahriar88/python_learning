@@ -234,6 +234,7 @@ https://forums.developer.nvidia.com/t/looking-for-a-pre-built-wheel-for-pytorch-
 # UR10________________________________________
 https://pypi.org/project/ur-rtde/
 pip install ur-rtde
+https://ieeexplore.ieee.org/document/10871000
 
 
 
@@ -316,5 +317,6 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-onl
 # After matplotlib.plot
 os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
 #_______________________________________________________________________________
+
 
 
