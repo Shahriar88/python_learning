@@ -222,12 +222,7 @@ sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb
 
 
 
-# matplotlib restarting kernel****************************************************************
-import os
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-only
-# After matplotlib.plot
-os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
-#_______________________________________________________________________________
+
 
 
 
@@ -257,7 +252,10 @@ unzip - l Toolbox-1.0.0-py3-none-any.whl
 pip install Toolbox-1.0.0-py3-none-any.whl --no-deps --force-reinstall --ignore-requires-python
 
 
-# Troubleshoot__________________________________________________________________
+
+
+
+# Troubleshoot Error  ****************************************************************
 
 1. ImportError: DLL load failed while importing _C: The operating system cannot run %1.________________________________________________________
 That Windows error means PyTorch’s native C/C++ extension (torch._C) couldn’t load—usually a mismatched/corrupt 
@@ -290,11 +288,11 @@ if Conda fails, try pip _________________
 conda activate div2k
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
+#_______________________________________________________________________________
 
 
 
-
-# Troubleshoot Error _____________________________________________________________
+# Troubleshoot Error  ****************************************************************
 # InternalTorchDynamoError: RuntimeError: Compiler: cl.exe is not found.
 
 Solution 1: 
@@ -307,7 +305,16 @@ if model_compile:
 
 Solution 2:
 Install Microsoft Visual C++ distribution (see C++Distribution.png)
+#_______________________________________________________________________________
 
 
+
+
+# matplotlib restarting kernel error troubleshoot ****************************************************************
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"   # ⚠️ temporary, evaluation-only
+# After matplotlib.plot
+os.environ["KMP_DUPLICATE_LIB_OK"] = "FALSE"
+#_______________________________________________________________________________
 
 
