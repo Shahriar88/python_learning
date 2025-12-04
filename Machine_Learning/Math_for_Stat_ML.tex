@@ -79,6 +79,240 @@ $(A\odot B)^\top(A\odot B)=(A^\top A)\circ(B^\top B)$.
 \item \textbf{Aggregation with $\mathbf{1}_k$:} If $M=\begin{bmatrix}1&2&3\\4&5&6\end{bmatrix}$, $M\mathbf{1}_3=\begin{bmatrix}6\\15\end{bmatrix}$ (row sums). Not a cumulative sum\index{cumulative sum@\emph{not} cumulative}.
 \end{itemize}
 
+
+
+
+\section{Einstein Summation Notation: Explanation and Examples\index{Einstein summation}}
+
+Einstein summation notation is a compact way to write sums over indices. It is especially useful in tensor algebra, differential geometry, and modern machine learning\index{tensor algebra}\index{machine learning}.
+
+\subsection*{Main Rule}
+If an index appears \textbf{exactly twice} in a single term (once as a subscript or superscript and once again), then it is \textbf{implicitly summed} over its range.
+
+For example,
+\[
+a_i b_i
+\]
+is shorthand for
+\[
+\sum_{i} a_i b_i.
+\]
+
+There is no need to write the summation symbol $\sum$ explicitly.
+
+\subsection{Vector Example: Dot Product}
+
+Consider two vectors $\mathbf{a}$ and $\mathbf{b}$ in $\mathbb{R}^n$ with components $a_i$ and $b_i$.
+
+\subsubsection*{Standard notation}
+\[
+\mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^{n} a_i b_i.
+\]
+
+\subsubsection*{Einstein notation}
+\[
+\mathbf{a} \cdot \mathbf{b} = a_i b_i.
+\]
+
+Here the index $i$ is repeated, so it is understood that we sum over $i = 1,\dots,n$.
+
+\subsection{Matrix--Vector Multiplication}
+
+Let $A$ be an $m \times n$ matrix with entries $A_{ij}$, and let $\mathbf{x}$ be a vector in $\mathbb{R}^n$ with components $x_j$. The result $\mathbf{y} = A \mathbf{x}$ is a vector in $\mathbb{R}^m$ with components $y_i$.
+
+\subsubsection*{Standard notation}
+\[
+y_i = \sum_{j=1}^{n} A_{ij} x_j.
+\]
+
+\subsubsection*{Einstein notation}
+\[
+y_i = A_{ij} x_j.
+\]
+
+Explanation:
+\begin{itemize}[leftmargin=*]
+    \item $j$ is a repeated index $\Rightarrow$ sum over $j$.
+    \item $i$ appears only once $\Rightarrow$ $y_i$ is the $i$-th component of the result.
+\end{itemize}
+
+\subsection{Matrix--Matrix Multiplication}
+
+Let $A$ be an $m \times p$ matrix with entries $A_{ik}$ and $B$ be a $p \times n$ matrix with entries $B_{kj}$. Their product $C = AB$ is an $m \times n$ matrix with entries $C_{ij}$.
+
+\subsubsection*{Standard notation}
+\[
+C_{ij} = \sum_{k=1}^{p} A_{ik} B_{kj}.
+\]
+
+\subsubsection*{Einstein notation}
+\[
+C_{ij} = A_{ik} B_{kj}.
+\]
+
+Explanation:
+\begin{itemize}[leftmargin=*]
+    \item $k$ is repeated $\Rightarrow$ sum over $k$.
+    \item $i$ and $j$ are free indices $\Rightarrow$ $C$ has indices $(i,j)$.
+\end{itemize}
+
+\subsection{Kronecker Delta}
+
+The Kronecker delta $\delta_{ij}$ is defined by
+\[
+\delta_{ij} =
+\begin{cases}
+1, & \text{if } i = j,\\
+0, & \text{if } i \neq j.
+\end{cases}
+\]
+
+\subsubsection*{Identity action on a vector}
+
+For a vector $x_j$, we have
+\[
+\delta_{ij} x_j = x_i.
+\]
+
+\subsubsection*{Standard notation}
+\[
+\delta_{ij} x_j = \sum_{j} \delta_{ij} x_j = x_i.
+\]
+
+Here the sum over $j$ ``picks out'' the $i$-th component.
+
+\subsubsection*{Einstein notation}
+\[
+\delta_{ij} x_j = x_i.
+\]
+
+\subsection{Tensor Contraction Example}
+
+Consider a rank-3 tensor $T_{ijk}$ and vectors $v_j$ and $w_k$. Define
+\[
+u_i = T_{ijk} v_j w_k.
+\]
+
+\subsubsection*{Standard notation}
+\[
+u_i = \sum_{j} \sum_{k} T_{ijk} v_j w_k.
+\]
+
+\subsubsection*{Einstein notation}
+\[
+u_i = T_{ijk} v_j w_k.
+\]
+
+Explanation:
+\begin{itemize}[leftmargin=*]
+    \item $j$ is repeated $\Rightarrow$ sum over $j$.
+    \item $k$ is repeated $\Rightarrow$ sum over $k$.
+    \item $i$ is free $\Rightarrow$ the result $u_i$ is a vector.
+\end{itemize}
+
+\subsection{Mixed Upper and Lower Indices}
+
+In many physics applications (especially relativity), one distinguishes between \emph{covariant} (lower) and \emph{contravariant} (upper) indices\index{covariant}\index{contravariant}.
+
+\subsubsection*{Scalar from a contravariant and a covariant vector}
+Let $A^i$ be contravariant components and $B_i$ covariant components. Then
+\[
+A^i B_i = \sum_{i} A^i B_i.
+\]
+
+Einstein notation:
+\[
+A^i B_i.
+\]
+
+Since $i$ appears once up and once down, it is summed over.
+
+\subsubsection*{Linear map acting on a vector}
+Let $T^{i}{}_{j}$ be a (1,1)-tensor (a linear map) and $v^j$ a vector. Define
+\[
+u^i = T^{i}{}_{j} v^j.
+\]
+
+Standard notation:
+\[
+u^i = \sum_{j} T^{i}{}_{j} v^j.
+\]
+
+Einstein notation:
+\[
+u^i = T^{i}{}_{j} v^j.
+\]
+
+Here $j$ is repeated and thus summed; $i$ is free.
+
+\subsection{Levi--Civita Symbol and the Cross Product}
+
+The Levi--Civita symbol $\epsilon_{ijk}$ in three dimensions is defined by
+\[
+\epsilon_{ijk} =
+\begin{cases}
++1, & \text{if } (i,j,k) \text{ is an even permutation of } (1,2,3),\\
+-1, & \text{if } (i,j,k) \text{ is an odd permutation of } (1,2,3),\\
+0, & \text{if any two indices are equal.}
+\end{cases}
+\]
+
+Given vectors $a_j$ and $b_k$, the cross product $\mathbf{a} \times \mathbf{b}$ has components
+\[
+(\mathbf{a} \times \mathbf{b})_i = \epsilon_{ijk} a_j b_k.
+\]
+
+\subsubsection*{Standard notation}
+\[
+(\mathbf{a} \times \mathbf{b})_i = \sum_{j} \sum_{k} \epsilon_{ijk} a_j b_k.
+\]
+
+\subsubsection*{Einstein notation}
+\[
+(\mathbf{a} \times \mathbf{b})_i = \epsilon_{ijk} a_j b_k.
+\]
+
+Again, $j$ and $k$ are repeated and therefore summed.
+
+\subsection{Example from Machine Learning: Linear Layer}
+
+Consider a linear layer (fully connected layer) in machine learning:
+\[
+y_i = W_{ij} x_j + b_i,
+\]
+where $W_{ij}$ is a weight matrix, $x_j$ is the input vector, and $b_i$ is the bias vector.
+
+\subsubsection*{Forward pass}
+\[
+y_i = W_{ij} x_j + b_i.
+\]
+Here $j$ is summed over, $i$ is free.
+
+\subsubsection*{Gradient with respect to weights}
+
+Let $L$ be a loss function depending on $y_i$. The gradient of $L$ with respect to $W_{ij}$ is
+\[
+\frac{\partial L}{\partial W_{ij}} = \frac{\partial L}{\partial y_i} \, x_j.
+\]
+
+Note:
+\begin{itemize}[leftmargin=*]
+    \item $i$ and $j$ both appear once on the left-hand side, so the gradient is a matrix with indices $(i,j)$.
+    \item On the right-hand side, there is \emph{no} repeated index, so there is no implied sum here: this formula gives each component of the gradient.
+\end{itemize}
+
+\subsection{Summary of Rules}
+
+\begin{itemize}[leftmargin=*]
+    \item If an index appears exactly twice in a term, it is summed over (dummy index).
+    \item Indices that appear only once in a term are free indices and label the components of the result.
+    \item Expressions should not contain an index repeated more than twice in a single term; such expressions are considered ambiguous or invalid in Einstein notation.
+\end{itemize}
+
+
+
+
+
 \section{Core Statistical Building Blocks\index{statistics!core}}
 \subsection{Mean and variance\index{mean}\index{variance}}
 \[
