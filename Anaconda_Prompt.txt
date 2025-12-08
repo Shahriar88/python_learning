@@ -292,6 +292,11 @@ pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchau
 #_______________________________________________________________________________
 
 
+# LLaVA  ****************************************************************
+https://llava-vl.github.io/
+https://www.jetson-ai-lab.com/tutorial_live-llava.html
+
+
 
 # Troubleshoot Error  ****************************************************************
 # InternalTorchDynamoError: RuntimeError: Compiler: cl.exe is not found.
@@ -325,4 +330,5 @@ print(create_model)                       # where is it from?
 import inspect
 print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
+
 
