@@ -1,0 +1,1221 @@
+% !TeX program = pdflatex
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{makeidx} % for index
+\usepackage{float}
+
+
+
+\makeindex % enable index generation
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+% ---------- Listings configuration: more visible code ----------
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codecomment}{RGB}{120,120,120}
+\definecolor{codekeyword}{RGB}{0,0,150}
+\definecolor{codestring}{RGB}{0,120,0}
+
+\lstset{
+  language=bash,
+  basicstyle=\ttfamily\bfseries\small,
+  keywordstyle=\color{codekeyword}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  backgroundcolor=\color{codebg},
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  rulecolor=\color{black},
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=8pt,
+  xleftmargin=2em,
+  framexleftmargin=1.5em,
+  literate={\$}{{\textdollar}}1,
+  float,
+  floatplacement=htbp,
+}
+
+
+% New environment: codeblock = listings inside a minipage (no page break)
+\lstnewenvironment{codeblock}[1][]%
+{%
+  \noindent
+  \minipage{\linewidth}%
+  \lstset{#1}%
+}%
+{%
+  \endminipage\ignorespacesafterend%
+}
+
+
+
+
+\title{Getting Started with SLURM\index{SLURM} and Python Environments on an HPC Cluster\index{HPC cluster}}
+\author{Md Shahriar Forhad\\\texttt{shahriar.forhad.eee@gmail.com}}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+This short tutorial explains how to:
+\begin{itemize}
+  \item Write a basic SLURM\index{SLURM!batch script} batch script for running a TensorFlow\index{TensorFlow} job.
+  \item Understand key \texttt{\#SBATCH}\index{\#SBATCH directives} directives, including nodes, partitions, GPUs, and time limits.
+  \item Use and extend a shared TensorFlow environment on the cluster.
+  \item Create your own Python virtual environments\index{virtual environment} for CPU and GPU workloads\index{GPU workload}.
+\end{itemize}
+
+All examples are designed to be copied directly into a terminal or SLURM job script on a typical HPC system (e.g., a university cluster\index{university cluster}).
+
+\subsection{Logging In to CRADLE}
+\label{sec:login-cradle}
+
+Once you have received your user account information, you can log in to the
+CRADLE cluster\index{CRADLE} from a terminal or command-line prompt using your
+University credentials.
+
+\subsubsection*{Step 1: Connect to the University Network (VPN)}
+
+If you are off campus, you must first connect to the University network using the
+approved VPN\index{VPN} software. Install and start the VPN client, then log in
+with your University credentials. Once the VPN connection is active, you can reach
+the CRADLE login node.
+
+\subsubsection*{Step 2: SSH into the Cluster}
+
+To log in, use \texttt{ssh}\index{ssh} with your assigned username. In the
+examples below, replace \texttt{username} with your actual cluster username.
+
+\begin{codeblock}
+ssh username@login.cradle.university.edu
+\end{codeblock}
+
+You will be prompted for your password:
+
+\begin{codeblock}
+username@login.cradle.university.edu's password:
+\end{codeblock}
+
+After you enter your password correctly, you should see a prompt indicating
+that you are now on the cluster login node, similar to:
+
+\begin{codeblock}
+[username@login001 ~]$
+\end{codeblock}
+
+
+At this point you are logged into CRADLE and ready to work with SLURM, Python
+environments, and the other tools described in this tutorial.
+%______________________________________________________________________________________________
+
+\section{A Minimal SLURM Job Script Example}
+\label{sec:basic-script}
+
+Listing~\ref{lst:basic-script} shows a basic SLURM job script that runs a TensorFlow test script in a shared environment\index{environment!shared}.
+
+\begin{codeblock}[caption={Basic SLURM job script with TensorFlow environment},label={lst:basic-script}]
+#!/bin/bash
+
+# Job identification
+#SBATCH --job-name=myFirstJob
+
+# Standard output and error files (%j = job ID)
+#SBATCH --output=myFirstJob.out.%j
+#SBATCH --error=myFirstJob.err.%j
+
+# Resource requests
+#SBATCH -N 1
+#SBATCH -p kimq
+#SBATCH --gres=gpu:1
+#SBATCH --time=1:00:00
+
+# Display GPU assigned by SLURM
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+# Activate TensorFlow virtual environment
+echo "Activating TensorFlow-2.6.2 environment"
+source /shared/tensorflow-2.6.2/tf_env/bin/activate
+
+# Run TensorFlow test script
+echo "Running testTF.py"
+python3 ~/testTFForSlurm/testTF.py
+
+# Deactivate environment
+echo "Deactivating TensorFlow-2.6.2 environment"
+deactivate
+\end{codeblock}
+
+To submit this job to SLURM, save the script as \texttt{myFirstJob.slurm} (for example) and run:
+\begin{codeblock}
+sbatch myFirstJob.slurm
+\end{codeblock}
+
+\section{Understanding Key \texttt{\#SBATCH} Directives}
+\label{sec:sbatch-directives}
+
+The \texttt{\#SBATCH} lines at the top of the script tell SLURM what resources you want. They are not shell commands; they are scheduler directives\index{scheduler!directives}.
+
+\subsection{Number of Nodes: \texttt{-N}\index{-N@\texttt{-N}}}
+
+\begin{codeblock}
+#SBATCH -N 1
+\end{codeblock}
+
+This requests \textbf{1 compute node}\index{node!compute}. A node is a physical machine that may contain many CPU cores, memory, and possibly GPUs.
+
+More examples:\\
+\begin{codeblock}
+#SBATCH -N 1        # Single-node TensorFlow training
+#SBATCH -N 2        # Distributed job across 2 nodes
+#SBATCH -N 1-4      # SLURM may allocate anywhere from 1 to 4 nodes
+\end{codeblock}
+
+\subsection{Partition (Queue): \texttt{-p}\index{-p@\texttt{-p}}}
+
+\begin{codeblock}
+#SBATCH -p kimq
+\end{codeblock}
+
+The partition\index{partition} selects the \emph{group of nodes} (queue) your job will run on.
+
+Typical partitions might be:
+\begin{itemize}
+  \item \texttt{compute} $\rightarrow$ Standard CPU nodes
+  \item \texttt{bigmem} $\rightarrow$ High-memory nodes
+  \item \texttt{gpu} or \texttt{kimq} $\rightarrow$ GPU-enabled nodes\index{GPU!partition}
+\end{itemize}
+
+Examples:\\
+\begin{codeblock}
+#SBATCH -p kimq     # Run on GPU nodes in the kimq partition
+#SBATCH -p compute  # Run on CPU-only nodes
+\end{codeblock}
+
+\subsection{GPU Request: \texttt{--gres}\index{--gres@\texttt{--gres}}}
+
+\begin{codeblock}
+#SBATCH --gres=gpu:1
+\end{codeblock}
+
+This requests \textbf{1 GPU}\index{GPU!request} using the generic resource (GRES)\index{GRES} mechanism.
+
+More examples:\\
+\begin{codeblock}
+#SBATCH --gres=gpu:1          # One GPU
+#SBATCH --gres=gpu:2          # Two GPUs
+#SBATCH --gres=gpu:a100:1     # One NVIDIA A100 GPU (if supported)
+\end{codeblock}
+
+\paragraph{Important: Partition and GPU must match.}
+
+If you request GPUs but choose a CPU-only partition (e.g., \texttt{-p compute} with \texttt{--gres=gpu:1}), SLURM cannot satisfy the request and the job will stay pending or fail.
+
+\subsection{Time Limit: \texttt{--time}\index{--time@\texttt{--time}}}
+
+\begin{codeblock}
+#SBATCH --time=1:00:00
+\end{codeblock}
+
+This sets a \textbf{wall-clock time limit}\index{time limit} of 1 hour for your job. When this time is reached, SLURM terminates the job.
+
+More examples:\\
+\begin{codeblock}
+#SBATCH --time=00:30:00   # 30 minutes
+#SBATCH --time=04:00:00   # 4 hours
+#SBATCH --time=2-00:00:00 # 2 days
+\end{codeblock}
+
+\subsection{Summary Table of Core Directives}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Directive & Controls        & Example      \\
+\midrule
+\texttt{-N}      & Number of nodes  & \texttt{-N 1}      \\
+\texttt{-p}      & Hardware pool    & \texttt{-p kimq}   \\
+\texttt{--gres}  & GPU count        & \texttt{gpu:1}     \\
+\texttt{--time}  & Runtime limit    & \texttt{1:00:00}   \\
+\bottomrule
+\end{tabular}
+\caption{Core SLURM directives and examples.}
+\label{tab:directives}
+\end{table}
+
+\section{Why Use Python Environments on an HPC Cluster?}
+\label{sec:why-env}
+
+On HPC clusters, shared software environments (for example, a shared TensorFlow installation\index{TensorFlow!shared installation}) are usually:
+
+\begin{itemize}
+  \item Optimized for the cluster hardware (correct CUDA\index{CUDA}, cuDNN\index{cuDNN}, drivers).
+  \item Read-only for users.
+  \item Not modifiable by individual users.
+\end{itemize}
+
+You \emph{cannot} safely run:\\
+\begin{codeblock}
+pip install pandas
+\end{codeblock}\\
+inside a shared environment such as\\
+\begin{codeblock}
+ /shared/tensorflow-2.6.2/tf_env/
+\end{codeblock}
+\\because:
+
+\begin{itemize}
+  \item It is shared by everyone.
+  \item You do not have write permission.
+  \item Changes could break other users' jobs.
+\end{itemize}
+
+\textbf{Solution:} Clone the shared environment into your home directory, then customize the copy.
+
+\section{Cloning a Shared TensorFlow Environment}
+\label{sec:clone-env}
+
+\subsection{Step 1: Install the cloning tool (one time)}
+
+\begin{codeblock}
+pip3 install --user virtualenv-clone
+\end{codeblock}
+
+This:
+\begin{itemize}
+  \item Installs \texttt{virtualenv-clone}\index{virtualenv-clone} into your user space.
+  \item Does not require admin/root access.
+  \item Only needs to be run once.
+\end{itemize}
+
+\subsection{Step 2: Clone the shared environment}
+
+\begin{codeblock}
+virtualenv-clone /shared/tensorflow-2.6.2/tf_env ~/myEnvs/tf_env
+\end{codeblock}
+
+Here:
+\begin{itemize}
+  \item \texttt{/shared/tensorflow-2.6.2/tf\_env/} is the original, optimized, read-only TensorFlow environment.
+  \item \texttt{\textasciitilde/myEnvs/tf\_env} is your private, writable copy.
+\end{itemize}
+
+What gets copied:
+\begin{itemize}
+  \item Python version.
+  \item TensorFlow build (CUDA, cuDNN matched to cluster GPUs).
+  \item All installed dependencies.
+  \item Environment configuration tuned for the cluster.
+\end{itemize}
+
+Advantages:
+\begin{itemize}
+  \item Runs as fast as the shared environment.
+  \item You can safely add or upgrade packages.
+  \item No conflicts with other users.
+\end{itemize}
+
+\subsection{Step 3: Activate the cloned environment}
+
+\begin{codeblock}
+source ~/myEnvs/tf_env/bin/activate
+\end{codeblock}
+
+After activation:
+\begin{itemize}
+  \item \texttt{python} and \texttt{pip} point to your cloned environment.
+  \item Any \texttt{pip install} affects only your copy.
+\end{itemize}
+
+The shell prompt typically changes to something like:\\
+\begin{codeblock}
+(tf_env) username@node \$
+\end{codeblock}
+
+\subsection{Step 4: Add new packages (example: \texttt{pandas})}
+
+With the environment active:\\
+\begin{codeblock}
+pip3 install pandas
+\end{codeblock}
+
+What happens:
+\begin{itemize}
+  \item \texttt{pandas}\index{pandas} is installed only into \texttt{\textasciitilde/myEnvs/tf\_env}.
+  \item TensorFlow and CUDA support remain intact.
+  \item The customization is isolated and safe.
+\end{itemize}
+
+You can also add:\\
+\begin{codeblock}
+pip install scikit-learn matplotlib seaborn tqdm
+\end{codeblock}
+
+\subsection{Step 5: Use the cloned environment in your SLURM job}
+
+Update the activation lines in your job script.
+
+\paragraph{Old (shared environment):\\}
+\begin{codeblock}
+echo "Activating TensorFlow-2.6.2 environment"
+source /shared/tensorflow-2.6.2/tf_env/bin/activate
+\end{codeblock}
+
+\paragraph{New (your cloned environment):\\}
+\begin{codeblock}
+echo "Activating my custom environment"
+source ~/myEnvs/tf_env/bin/activate
+\end{codeblock}
+
+This ensures:
+\begin{itemize}
+  \item Your job sees TensorFlow and any extra packages (e.g., \texttt{pandas}).
+  \item You avoid dependency errors at runtime.
+  \item The behavior of your job is reproducible.
+\end{itemize}
+
+\subsection{Mental Model Summary}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Piece               & Purpose                             \\
+\midrule
+Shared environment  & Fast, optimized, read-only          \\
+Cloned environment  & Same speed, user-modifiable         \\
+\texttt{virtualenv-clone} & Copies entire environment     \\
+\texttt{pip install}      & Safe only in cloned environment \\
+Job script          & Must activate your chosen environment \\
+\bottomrule
+\end{tabular}
+\caption{Conceptual roles of shared and cloned environments.}
+\label{tab:env-model}
+\end{table}
+
+\section{Creating Your Own Python Virtual Environment}
+\label{sec:create-own-env}
+
+Sometimes you want a completely independent Python environment\index{Python environment}. There are two main options; here we focus on standard \texttt{venv}\index{venv} and the cloned approach.
+
+\subsection{Option A (Recommended for CPU-Only): Create from Scratch}
+
+\subsubsection{Step 1: Choose a location}
+
+Create a directory to hold your environments:\\
+\begin{codeblock}
+mkdir -p ~/myEnvs
+\end{codeblock}
+
+\subsubsection{Step 2: Create the virtual environment}
+
+\begin{codeblock}
+python3 -m venv ~/myEnvs/myenv
+\end{codeblock}
+
+
+This creates something like:\\
+\begin{codeblock}
+~/myEnvs/myenv/
+|- bin/
+|- lib/
+`- pyvenv.cfg
+\end{codeblock}
+
+
+\subsubsection{Step 3: Activate the environment}
+
+\begin{codeblock}
+source ~/myEnvs/myenv/bin/activate
+\end{codeblock}
+
+Your shell prompt changes to:\\
+\begin{codeblock}
+(myenv) username@login $
+\end{codeblock}
+
+\subsubsection{Step 4: Upgrade \texttt{pip} (recommended)}
+
+\begin{codeblock}
+pip install --upgrade pip
+\end{codeblock}
+
+\subsubsection{Step 5: Install packages}
+
+Example:\\
+\begin{codeblock}
+pip install tensorflow pandas numpy matplotlib
+\end{codeblock}
+
+Note: On clusters, installing TensorFlow this way may not include GPU support unless CUDA and drivers are correctly matched. For GPU workloads, the cloned shared environment (Option B) is often safer.
+
+\subsubsection{Step 6: Use this environment in a SLURM job}
+
+In your job script:\\
+\begin{codeblock}
+source ~/myEnvs/myenv/bin/activate
+python train.py
+\end{codeblock}
+
+\subsection{Option B (Best for GPU): Clone an Optimized Shared Environment}
+
+This is essentially the workflow described in Section~\ref{sec:clone-env}.
+
+\begin{enumerate}[label=Step \arabic*:, leftmargin=*]
+  \item Install the clone tool:\\
+  \begin{codeblock}
+pip install --user virtualenv-clone
+  \end{codeblock}
+
+  \item Clone the shared environment:\\
+  \begin{codeblock}
+virtualenv-clone /shared/tensorflow-2.6.2/tf_env ~/myEnvs/tf_env
+  \end{codeblock}
+
+  \item Activate it:\\
+  \begin{codeblock}
+source ~/myEnvs/tf_env/bin/activate
+  \end{codeblock}
+
+  \item Add packages:\\
+  \begin{codeblock}
+pip install pandas scikit-learn seaborn
+  \end{codeblock}
+
+  \item Update your SLURM job to activate:\\
+  \begin{codeblock}
+source ~/myEnvs/tf_env/bin/activate
+  \end{codeblock}
+\end{enumerate}
+
+This preserves CUDA/cuDNN compatibility and performance while allowing you to customize the environment.
+
+\section{Verifying Your Environment and Common Pitfalls}
+\label{sec:verify-common}
+
+\subsection{Verifying Python and GPU Visibility}
+
+After activating an environment, verify what \texttt{python} and \texttt{pip} you are using:\\
+\begin{codeblock}
+which python
+which pip
+\end{codeblock}
+
+For TensorFlow GPU detection:\\
+\begin{codeblock}
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+\end{codeblock}
+
+You should see at least one GPU listed when running on a GPU node with correct drivers and environment.
+
+\subsection{Common Mistakes to Avoid}
+
+\begin{itemize}
+  \item Installing packages without activating the environment first.
+  \item Using \texttt{pip install --user} inside a virtual environment.
+  \item Mixing Conda environments and \texttt{venv} in the same workflow.
+  \item Using the system Python (no virtual environment) for SLURM jobs.
+  \item Requesting GPUs in a CPU-only partition.
+\end{itemize}
+
+\subsection{Quick Decision Guide}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Situation                & Best choice         \\
+\midrule
+CPU-only work            & Option A (new \texttt{venv}) \\
+GPU + TensorFlow         & Option B (clone shared env)  \\
+Cluster-optimized builds & Option B                     \\
+Full custom control      & Option A                     \\
+\bottomrule
+\end{tabular}
+\caption{Choosing between creating and cloning environments.}
+\label{tab:decision-guide}
+\end{table}
+%______________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+\section{Using Micromamba and Portable Conda Environments on the HPC Cluster}
+\label{sec:micromamba}
+
+On many HPC clusters, including CRADLE, traditional Conda/Anaconda installations
+are discouraged or restricted because they are large, modify shell startup
+files aggressively, and may conflict with system libraries or CUDA drivers.
+A lightweight and HPC-friendly alternative is \emph{Micromamba}\index{Micromamba},
+a single static binary that implements the Conda ecosystem without requiring
+a global base environment.
+
+Micromamba allows you to:
+\begin{itemize}
+  \item Recreate a Conda environment from a portable YAML file exported on your laptop.
+  \item Install packages into your home directory without administrator rights.
+  \item Activate environments explicitly inside SLURM job scripts.
+\end{itemize}
+
+The overall workflow is:
+\begin{enumerate}
+  \item Export a portable Conda environment YAML on your local machine.
+  \item Copy the YAML file to CRADLE.
+  \item Install Micromamba in your home directory on CRADLE.
+  \item Create a Micromamba environment from the YAML file.
+  \item Activate the environment in your SLURM job scripts.
+\end{enumerate}
+
+\subsection{Exporting a Portable Conda Environment on Your PC}
+\label{subsec:export-conda}
+
+On your local machine where you already use Conda, start by creating
+a portable YAML description of your environment. Suppose your local
+environment is called \texttt{IR}\index{Conda environment!IR}.
+
+First, activate it:\\
+\begin{codeblock}
+conda activate IR
+\end{codeblock}
+
+Then export a \emph{portable} environment file using \texttt{\-\-from\-history}:\\
+\begin{codeblock}
+conda env export --from-history > IR_portable.yml
+\end{codeblock}
+
+This creates a file \texttt{IR\_portable.yml} containing the channels and
+high-level dependencies (without build hashes). It is much more likely to
+recreate successfully on a different system such as CRADLE.
+
+\subsection{Copying the YAML File to CRADLE}
+\label{subsec:copy-yaml}
+
+Use \texttt{scp}\index{scp} or an equivalent file transfer method to copy
+\texttt{IR\_portable.yml} to your home directory on CRADLE. For example, from
+your local terminal:\\
+
+\begin{codeblock}
+scp IR_portable.yml username@login.cradle.university.edu:~
+\end{codeblock}
+
+After logging into CRADLE, you should see the file in your home directory:\\
+\begin{codeblock}
+ls ~/IR_portable.yml
+\end{codeblock}
+
+\subsection{Installing Micromamba in Your Home Directory}
+\label{subsec:install-micromamba}
+
+Micromamba is distributed as a single binary, which makes it ideal for
+installation in a user home directory (no root access required).
+
+Create a directory for the binary:\\
+\begin{codeblock}
+mkdir -p ~/bin
+cd ~/bin
+\end{codeblock}
+
+Download and unpack the latest Micromamba binary (Linux 64-bit):\\
+
+\begin{codeblock}
+curl -L https://micro.mamba.pm/api/micromamba/linux-64/latest \
+  | tar -xvj bin/micromamba
+\end{codeblock}
+
+Add \texttt{\$HOME/bin} to your \texttt{PATH} in \texttt{\~/.bashrc}:\\
+\begin{codeblock}
+echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+\end{codeblock}
+
+Verify that \texttt{micromamba} is available:\\
+\begin{codeblock}
+micromamba --version
+\end{codeblock}
+
+\subsection{Creating a Micromamba Environment from the YAML File}
+\label{subsec:create-micromamba-env}
+
+Choose a directory where Micromamba will store its environments, for example:\\
+\begin{codeblock}
+mkdir -p ~/micromamba/envs
+\end{codeblock}
+
+Initialize Micromamba for Bash (one time):\\
+
+\begin{codeblock}
+micromamba shell init -s bash -p ~/micromamba
+source ~/.bashrc
+\end{codeblock}
+
+Now create a new environment (for example, \texttt{IR\_NEW}) from your portable
+YAML file:\\
+
+\begin{codeblock}
+micromamba create \
+  -f ~/IR_portable.yml \
+  -n IR_NEW \
+  -p ~/micromamba/envs/IR_NEW
+\end{codeblock}
+
+Here:
+\begin{itemize}
+  \item \texttt{\~{}/IR\_portable.yml} is the YAML exported on your PC.
+  \item \texttt{IR\_NEW} is the environment name.
+  \item \texttt{\~{}/micromamba/envs/IR\_NEW} is the full path Micromamba uses.
+\end{itemize}
+
+\subsection{Activating the Environment on CRADLE}
+\label{subsec:activate-micromamba}
+
+Once created, you can activate the environment on the CRADLE login node:\\
+
+\begin{codeblock}
+micromamba activate ~/micromamba/envs/IR_NEW
+\end{codeblock}
+
+After activation:
+\begin{itemize}
+  \item \texttt{python} and \texttt{pip} refer to the Micromamba environment.
+  \item Any installs via \texttt{pip} or \texttt{micromamba install} affect only that environment.
+\end{itemize}
+
+You can verify:\\
+\begin{codeblock}
+which python
+python --version
+pip list
+\end{codeblock}
+
+\subsection{Using a Micromamba Environment in a SLURM Job}
+\label{subsec:micromamba-slurm}
+
+In a SLURM job script, you should explicitly set the Micromamba root and
+activate the environment before running Python code. For example:
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=ir_gpu_job
+#SBATCH --output=ir_gpu_job.out.%j
+#SBATCH --error=ir_gpu_job.err.%j
+#SBATCH -N 1
+#SBATCH -p kimq             # GPU partition
+#SBATCH --gres=gpu:1        # 1 GPU
+#SBATCH --time=02:00:00     # 2 hours
+
+# Ensure Micromamba root is defined
+export MAMBA_ROOT_PREFIX=$HOME/micromamba
+
+# Load shell initialization (if micromamba shell init was used)
+source $HOME/.bashrc
+
+echo "Host: $(hostname)"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+echo "Activating Micromamba environment IR_NEW"
+micromamba activate $HOME/micromamba/envs/IR_NEW
+
+echo "Checking TensorFlow GPU visibility"
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+echo "Running training script"
+python ~/projects/train_ir_model.py
+\end{codeblock}
+
+This pattern ensures that:
+\begin{itemize}
+  \item The correct Micromamba environment is active inside the job.
+  \item GPU visibility can be checked via TensorFlow (or PyTorch).
+  \item The job is reproducible and does not depend on the login-node Conda setup.
+\end{itemize}
+
+\subsection{Verifying GPU Support Inside the Environment}
+\label{subsec:verify-gpu}
+
+To confirm that your Micromamba environment has working GPU support for
+TensorFlow (or another framework), you can run:\\
+
+\begin{codeblock}
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+\end{codeblock}
+
+On a GPU node with correct drivers and CUDA libraries, this should list one or
+more GPU devices. You can also check the low-level GPU visibility with:\\
+\begin{codeblock}
+nvidia-smi
+\end{codeblock}
+
+\subsection{Best Practices and Common Pitfalls for Micromamba on HPC}
+\label{subsec:micromamba-best-practices}
+
+\textbf{Best practices:}
+\begin{itemize}
+  \item Export environments from Conda using \texttt{--from-history} or \texttt{--no-builds}
+        to avoid hardware-specific build strings.
+  \item Use Micromamba to recreate the environment on the cluster, not full Anaconda.
+  \item Keep all Micromamba files under \texttt{\~{}/micromamba} or a dedicated directory
+        in your home space.
+  \item Activate environments explicitly inside SLURM job scripts.
+\end{itemize}
+
+\textbf{Common pitfalls:}
+\begin{itemize}
+  \item Installing full Anaconda on an HPC login node (disk usage and conflicts).
+  \item Relying on Conda's \texttt{base} environment in batch jobs.
+  \item Mixing Conda and Micromamba environments in the same workflow.
+  \item Installing GPU frameworks with incompatible \texttt{cudatoolkit} versions;
+        always check which CUDA versions the cluster supports.
+\end{itemize}
+
+Using Micromamba with a portable Conda YAML exported from your local machine
+gives you a reproducible, HPC-safe way to manage Python environments on
+CRADLE while respecting cluster policies and maximizing compatibility with
+the installed NVIDIA drivers and CUDA libraries.
+%______________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Worked Examples: Environments and SLURM Job Scripts}
+\label{sec:examples}
+
+This section provides concrete, copy-pasteable examples covering:
+\begin{enumerate}
+  \item Creating a new environment.
+  \item Cloning a shared TensorFlow environment.
+  \item Selecting (activating) an environment.
+  \item Installing extra libraries.
+  \item Checking and verifying resources.
+  \item Writing SLURM scripts for different resource requirements.
+\end{enumerate}
+
+% -------------------- Environments --------------------
+
+\subsection{Creating a New CPU-Only Environment}
+\label{subsec:create-env-example}
+
+\begin{codeblock}
+# 1. Create a directory to store your environments
+mkdir -p ~/myEnvs
+
+# 2. Create a new CPU-only Python virtual environment
+python3 -m venv ~/myEnvs/cpu_env
+
+# 3. Activate the environment
+source ~/myEnvs/cpu_env/bin/activate
+
+# 4. Upgrade pip
+pip install --upgrade pip
+
+# 5. Install some common libraries
+pip install numpy scipy pandas matplotlib scikit-learn
+
+# 6. When finished, deactivate
+deactivate
+\end{codeblock}
+
+\subsection{Cloning a Shared GPU-Optimized TensorFlow Environment}
+\label{subsec:clone-env-example}
+
+\begin{codeblock}
+# 1. Install the clone tool (only once per user)
+pip3 install --user virtualenv-clone
+
+# 2. Create a directory to store your environments (if not already created)
+mkdir -p ~/myEnvs
+
+# 3. Clone the shared TensorFlow environment into your home directory
+virtualenv-clone /shared/tensorflow-2.6.2/tf_env ~/myEnvs/tf_env
+
+# 4. Activate the cloned environment
+source ~/myEnvs/tf_env/bin/activate
+
+# 5. Install extra libraries needed for your project
+pip install pandas scikit-learn matplotlib seaborn tqdm
+
+# 6. Deactivate when done
+deactivate
+\end{codeblock}
+
+\subsection{Selecting an Environment in a Job Script}
+\label{subsec:select-env-example}
+
+\paragraph{Activate the CPU-only environment:\\}
+\begin{codeblock}
+# Inside your SLURM job script
+echo "Activating CPU-only environment"
+source ~/myEnvs/cpu_env/bin/activate
+\end{codeblock}
+
+\paragraph{Activate the cloned GPU TensorFlow environment:\\}
+\begin{codeblock}
+# Inside your SLURM job script
+echo "Activating GPU TensorFlow environment"
+source ~/myEnvs/tf_env/bin/activate
+\end{codeblock}
+
+\subsection{Installing Libraries After Environment Activation}
+\label{subsec:install-libs-example}
+
+\paragraph{Inside the CPU-only environment:\\}
+\begin{codeblock}
+source ~/myEnvs/cpu_env/bin/activate
+pip install jupyter notebook ipykernel
+deactivate
+\end{codeblock}
+
+\paragraph{Inside the cloned GPU environment:\\}
+\begin{codeblock}
+source ~/myEnvs/tf_env/bin/activate
+pip install opencv-python pillow tensorboard
+deactivate
+\end{codeblock}
+
+% -------------------- Checking resources --------------------
+
+\subsection{Checking and Verifying Resources}
+\label{subsec:check-resources}
+
+This subsection shows how to verify what resources are available on the cluster
+and what resources SLURM\index{SLURM!resources} has actually allocated to your jobs.
+
+\subsubsection{Check Available Partitions and Nodes}
+
+To see which partitions and nodes exist and their current status:
+
+\begin{codeblock}
+# Show all partitions and their status
+sinfo
+\end{codeblock}
+
+For more detailed information about each node:
+
+\begin{codeblock}
+# Detailed node information
+scontrol show nodes
+\end{codeblock}
+
+\subsubsection{Check Your Jobs}
+
+To see all of your jobs in the queue:
+
+\begin{codeblock}
+# Show jobs for your user
+squeue -u $USER
+\end{codeblock}
+
+To inspect a specific job by its job ID:
+
+\begin{codeblock}
+# Show a specific job
+squeue -j <JOBID>
+\end{codeblock}
+
+\subsubsection{Inspect Resources Allocated by SLURM}
+
+To see precisely what resources were allocated to a job:
+
+\begin{codeblock}
+# Show full job allocation details
+scontrol show job <JOBID>
+\end{codeblock}
+
+Look for fields such as \texttt{NumNodes}, \texttt{NumCPUs}, \texttt{Gres},
+and \texttt{NodeList}.
+
+\subsubsection{Check Resources Inside a Job Script}
+
+Inside a running job, you can query SLURM environment variables\index{SLURM!environment variables}
+to see what was allocated:
+
+\begin{codeblock}
+echo "Job ID:            $SLURM_JOB_ID"
+echo "Nodes allocated:   $SLURM_NNODES"
+echo "Node list:         $SLURM_NODELIST"
+echo "CPUs per node:     $SLURM_CPUS_ON_NODE"
+echo "Tasks per node:    $SLURM_TASKS_PER_NODE"
+echo "Job partition:     $SLURM_JOB_PARTITION"
+\end{codeblock}
+
+\subsubsection{Check GPU Allocation}
+
+For GPU jobs, it is important to verify which GPUs are visible:
+
+\begin{codeblock}
+# GPUs assigned by SLURM (logical IDs)
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+# List visible GPUs and utilization
+nvidia-smi
+\end{codeblock}
+
+\subsubsection{Check CPU and Memory Usage}
+
+You can inspect CPU and memory characteristics on the node:
+
+\begin{codeblock}
+# CPU info
+lscpu
+
+# Memory info
+free -h
+
+# Per-node memory summary (first lines of /proc/meminfo)
+cat /proc/meminfo | head
+\end{codeblock}
+
+\subsubsection{Check Resources Used by Completed Jobs}
+
+After a job finishes, accounting information can be retrieved with
+\texttt{sacct}\index{sacct}:
+
+\begin{codeblock}
+# Accounting info for a finished job
+sacct -j <JOBID> --format=JobID,JobName,Partition,AllocCPUS,Elapsed,MaxRSS,State
+\end{codeblock}
+
+This shows how many CPUs were allocated, how long the job ran, peak memory
+usage (\texttt{MaxRSS}), and the final state (e.g., COMPLETED, FAILED, TIMEOUT).
+
+\subsubsection{Minimal Resource Debug Job}
+
+The following SLURM script does nothing except report which resources it
+received. It is useful when testing new partitions or debugging allocation
+issues:
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=resource_debug
+#SBATCH -N 1
+#SBATCH -p kimq
+#SBATCH --gres=gpu:1
+#SBATCH --time=00:10:00
+
+echo "Job ID:        $SLURM_JOB_ID"
+echo "Node list:     $SLURM_NODELIST"
+echo "CPUs/node:     $SLURM_CPUS_ON_NODE"
+echo "GPUs visible:  $CUDA_VISIBLE_DEVICES"
+
+echo "==== nvidia-smi ===="
+nvidia-smi
+
+echo "==== lscpu ===="
+lscpu
+
+echo "==== memory ===="
+free -h
+\end{codeblock}
+
+% -------------------- Job templates --------------------
+
+\subsection{SLURM Job Templates for Different Resource Requirements}
+\label{subsec:slurm-templates}
+
+This subsection shows full job scripts for common use cases.
+
+\subsubsection{Single Node, CPU-Only Job}
+\label{subsubsec:cpu-only-job}
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=cpu_only_job
+#SBATCH --output=cpu_only_job.out.%j
+#SBATCH --error=cpu_only_job.err.%j
+#SBATCH -N 1
+#SBATCH -p compute        # CPU-only partition
+#SBATCH --time=01:00:00   # 1 hour
+
+echo "Host: $(hostname)"
+echo "Using CPU-only environment"
+source ~/myEnvs/cpu_env/bin/activate
+
+echo "Running CPU-only Python script"
+python ~/projects/my_cpu_script.py
+
+echo "Deactivating environment"
+deactivate
+\end{codeblock}
+
+\subsubsection{Single Node, Single GPU Job}
+\label{subsubsec:single-gpu-job}
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=single_gpu_job
+#SBATCH --output=single_gpu_job.out.%j
+#SBATCH --error=single_gpu_job.err.%j
+#SBATCH -N 1
+#SBATCH -p kimq           # GPU partition
+#SBATCH --gres=gpu:1      # 1 GPU
+#SBATCH --time=02:00:00   # 2 hours
+
+echo "Host: $(hostname)"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+echo "Activating GPU TensorFlow environment"
+source ~/myEnvs/tf_env/bin/activate
+
+echo "Running single-GPU training script"
+python ~/projects/train_single_gpu.py
+
+echo "Deactivating environment"
+deactivate
+\end{codeblock}
+
+\subsubsection{Single Node, Multiple GPUs (e.g., 4 GPUs)}
+\label{subsubsec:multi-gpu-single-node}
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=multi_gpu_job
+#SBATCH --output=multi_gpu_job.out.%j
+#SBATCH --error=multi_gpu_job.err.%j
+#SBATCH -N 1
+#SBATCH -p kimq            # GPU partition
+#SBATCH --gres=gpu:4       # 4 GPUs on the same node
+#SBATCH --time=04:00:00    # 4 hours
+
+echo "Host: $(hostname)"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+echo "Activating GPU TensorFlow environment"
+source ~/myEnvs/tf_env/bin/activate
+
+echo "Running multi-GPU training script (e.g., data parallel)"
+python ~/projects/train_multi_gpu.py --num-gpus 4
+
+echo "Deactivating environment"
+deactivate
+\end{codeblock}
+
+\subsubsection{Multiple Nodes, CPU-Only (e.g., MPI or Distributed CPU Job)}
+\label{subsubsec:multi-node-cpu}
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=cpu_multi_node_job
+#SBATCH --output=cpu_multi_node_job.out.%j
+#SBATCH --error=cpu_multi_node_job.err.%j
+#SBATCH -N 2               # 2 nodes
+#SBATCH -p compute         # CPU-only partition
+#SBATCH --time=03:00:00    # 3 hours
+
+echo "SLURM_NODELIST: $SLURM_NODELIST"
+echo "SLURM_NNODES:   $SLURM_NNODES"
+
+echo "Activating CPU-only environment"
+source ~/myEnvs/cpu_env/bin/activate
+
+# Example: launch an MPI or distributed job
+# (replace with your actual launcher, e.g., srun mpirun, torchrun, etc.)
+echo "Running distributed CPU job"
+srun python ~/projects/distributed_cpu_job.py
+
+echo "Deactivating environment"
+deactivate
+\end{codeblock}
+
+\subsubsection{Multiple Nodes, Multiple GPUs (Distributed GPU Training)}
+\label{subsubsec:multi-node-multi-gpu}
+
+\begin{codeblock}
+#!/bin/bash
+#SBATCH --job-name=multi_node_multi_gpu
+#SBATCH --output=multi_node_multi_gpu.out.%j
+#SBATCH --error=multi_node_multi_gpu.err.%j
+#SBATCH -N 2                # 2 nodes
+#SBATCH -p kimq             # GPU partition
+#SBATCH --gres=gpu:4        # 4 GPUs per node (total 8 GPUs)
+#SBATCH --time=06:00:00     # 6 hours
+
+echo "SLURM_NODELIST: $SLURM_NODELIST"
+echo "SLURM_NNODES:   $SLURM_NNODES"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"
+
+echo "Activating GPU TensorFlow environment"
+source ~/myEnvs/tf_env/bin/activate
+
+# Example using srun to launch a distributed training job
+# Replace with your actual distributed launcher (e.g., torchrun, horovodrun)
+echo "Running multi-node, multi-GPU training"
+srun python ~/projects/train_distributed_gpu.py \
+     --nodes $SLURM_NNODES \
+     --gpus-per-node 4
+
+echo "Deactivating environment"
+deactivate
+\end{codeblock}
+
+% -------------------- Quick mapping --------------------
+
+\subsection{Quick Mapping: Which Example to Use?}
+\label{subsec:which-example}
+
+\begin{itemize}
+  \item \textbf{Create new CPU environment}: Listing in Section~\ref{subsec:create-env-example}.
+  \item \textbf{Clone shared GPU TF environment}: Listing in Section~\ref{subsec:clone-env-example}.
+  \item \textbf{CPU-only job}: Section~\ref{subsubsec:cpu-only-job}.
+  \item \textbf{Single-GPU job}: Section~\ref{subsubsec:single-gpu-job}.
+  \item \textbf{Single node, multiple GPUs}: Section~\ref{subsubsec:multi-gpu-single-node}.
+  \item \textbf{Multi-node CPU job}: Section~\ref{subsubsec:multi-node-cpu}.
+  \item \textbf{Multi-node, multi-GPU job}: Section~\ref{subsubsec:multi-node-multi-gpu}.
+\end{itemize}
+%______________________________________________________________________________________________
+
+\section{Summary}
+\label{sec:summary}
+
+In this tutorial, you have seen:
+
+\begin{itemize}
+  \item How to write and submit a basic SLURM job script that runs a TensorFlow program.
+  \item How to interpret key \texttt{\#SBATCH} directives: number of nodes, partition, GPU requests, and time limits.
+  \item Why shared environments on HPC clusters are read-only and how to safely extend them by cloning to your home directory.
+  \item How to create your own Python virtual environments from scratch and how to connect them to SLURM job scripts.
+\end{itemize}
+
+This workflow lets you run fast, GPU-enabled jobs using cluster-optimized software while keeping your custom Python packages isolated and safe.
+
+\printindex
+\end{document}
