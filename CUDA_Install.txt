@@ -30,7 +30,8 @@ pip install optuna
 
 pip install opencv-python
 
-pip install "gymnasium"
+pip install "gymnasium[classic-control]"
+conda install -c conda-forge swig box2d-py
 
 conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
 
@@ -75,5 +76,6 @@ Verify the current state of torch:________________________________
 print(model.training)
 print(torch.is_grad_enabled())
 print(torch.is_inference_mode_enabled())
+
 
 
