@@ -81,13 +81,9 @@ conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvi
 install important libraries:_________________________________________________________
 
 
-#pip install gym
-#pip install gym[box2d]
+pip install "gymnasium[classic-control]"
+conda install -c conda-forge swig box2d-py
 
-pip install swig
-pip install "gymnasium"
-pip install "gymnasium[all]"
-pip install Box2D
 
 pip install "gymnasium[box2d]"
 pip install gymnasium[mujoco]
@@ -330,5 +326,6 @@ print(create_model)                       # where is it from?
 import inspect
 print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
+
 
 
