@@ -67,6 +67,9 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 conda activate rf
 conda env export --no-builds > rf.yml
 
+# Same PC
+conda create --name new_env --clone old_env
+
 # on the new machine/env
 conda env create -f rf.yml -n rf_NEW
 
@@ -76,6 +79,7 @@ Verify the current state of torch:________________________________
 print(model.training)
 print(torch.is_grad_enabled())
 print(torch.is_inference_mode_enabled())
+
 
 
 
