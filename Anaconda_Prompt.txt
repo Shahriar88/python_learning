@@ -98,6 +98,19 @@ pip install numba
 
 
 
+*******************************************************************************
+# Clone Environment __________________________________________
+# from the working env
+conda activate rf
+conda env export --no-builds > rf.yml
+
+# Same PC
+conda create --name new_env --clone old_env
+
+# on the new machine/env
+conda env create -f rf.yml -n rf_NEW
+
+
 
 python code resources: ____________________________________________________________________________________________
 
@@ -326,6 +339,7 @@ print(create_model)                       # where is it from?
 import inspect
 print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
+
 
 
 
