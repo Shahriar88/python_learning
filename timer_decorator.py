@@ -79,3 +79,50 @@ x, elapsed = demo_single_return_with_elapsed()
 
 print("elapsed seconds =", elapsed)
 print("a, b =", a, b, "elapsed2 =", elapsed2)
+
+
+
+
+
+
+
+
+def timer_with_state(func):
+    """
+    Decorator that:
+    - prints elapsed time
+    - returns the original function result unchanged
+    - stores timing in func.last_elapsed and func.last_elapsed_str
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        elapsed = time.perf_counter() - start
+
+        h, rem = divmod(elapsed, 3600)
+        m, s = divmod(rem, 60)
+
+        wrapper.last_elapsed = elapsed
+        wrapper.last_elapsed_str = f"{int(h):02d}:{int(m):02d}:{s:05.2f} (hh:mm:ss)"
+
+        print(f"[TIMER] {func.__name__} finished in {wrapper.last_elapsed_str}")
+        return result
+
+    wrapper.last_elapsed = None
+    wrapper.last_elapsed_str = None
+    return wrapper
+
+
+
+
+@timer_with_state
+def demo_single():
+    time.sleep(0.2)
+    return 42
+
+x = demo_single()
+print("x =", x)
+print("elapsed seconds =", demo_single.last_elapsed)
+print("elapsed string  =", demo_single.last_elapsed_str)
+
