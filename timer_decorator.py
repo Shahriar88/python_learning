@@ -43,6 +43,8 @@ x = demo_single_return()          # x is 1
 a, b = demo_multiple_return()     # a=1, b=2
 
 
+#____________________________________________________________________
+
 # 2) Timer decorator: prints elapsed time AND returns elapsed
 def timer_with_elapsed(func):
     """Decorator that returns (result, elapsed_seconds)."""
@@ -85,7 +87,7 @@ print("a, b =", a, b, "elapsed2 =", elapsed2)
 
 
 
-
+#____________________________________________________________________
 
 def timer_with_state(func):
     """
@@ -125,4 +127,5 @@ x = demo_single()
 print("x =", x)
 print("elapsed seconds =", demo_single.last_elapsed)
 print("elapsed string  =", demo_single.last_elapsed_str)
+
 
