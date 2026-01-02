@@ -341,5 +341,20 @@ print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
 
 
+# Use multiple GPUs ****************************************************************
+import torch
+import torch.nn as nn
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+model = MyModel(...)  # your model
+if torch.cuda.is_available():
+    n = torch.cuda.device_count()
+    print("GPUs visible:", n)
+    if n > 1:
+        model = nn.DataParallel(model)  # uses all visible GPUs
+model = model.to(device)
+# train as usual
+#_______________________________________________________________________________
 
 
