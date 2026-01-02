@@ -1,5 +1,7 @@
 % !TeX program = pdflatex
 \documentclass[11pt]{article}
+\usepackage{graphicx}
+
 
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
@@ -299,6 +301,140 @@ inside a shared environment such as\\
 \end{itemize}
 
 \textbf{Solution:} Clone the shared environment into your home directory, then customize the copy.
+
+
+% ======================================================================================================
+\section{Transferring Files to and from the CRADLE Cluster}
+\label{sec:file-transfer}
+
+When working on the CRADLE HPC cluster, you will often need to move files between
+your local computer and the cluster. Common examples include:
+\begin{itemize}
+  \item Uploading scripts, data files, or configuration files to the cluster.
+  \item Downloading results, logs, or trained models back to your local machine.
+\end{itemize}
+
+This section presents two recommended and commonly used methods:
+\begin{enumerate}
+  \item Secure Copy (\texttt{scp})
+  \item Cloning repositories from GitHub
+\end{enumerate}
+
+\subsection{Using \texttt{scp} (Secure Copy)}
+\label{subsec:scp}
+
+The \texttt{scp}\index{scp} command allows you to securely transfer files between
+your local machine and the cluster over SSH. It works on Linux, macOS, and Windows
+(with PowerShell, Git Bash, or WSL).
+
+\subsubsection{Transferring a Local File to the Cluster}
+
+To copy a file from your local directory to your home directory on the cluster:
+
+\begin{codeblock}
+scp localFileInMyDirectory.txt \
+    yourUserName@login.cradle.university.edu:~/destinationForYourFile/
+\end{codeblock}
+
+Explanation:
+\begin{itemize}
+  \item \texttt{localFileInMyDirectory.txt} is the file on your local computer.
+  \item \texttt{yourUserName@login.cradle.university.edu} is your cluster login.
+  \item \texttt{\~{}/destinationForYourFile/} is the target directory on the cluster.
+\end{itemize}
+
+If the destination directory does not exist, create it first after logging in:
+\begin{codeblock}
+mkdir -p ~/destinationForYourFile
+\end{codeblock}
+
+\subsubsection{Transferring a File from the Cluster to Your Local Machine}
+
+To copy a file from the cluster back to your local directory:
+
+\begin{codeblock}
+scp yourUserName@login.cradle.university.edu:~/destinationForYourFile/localFileInMyDirectory.txt \
+    .
+\end{codeblock}
+
+Here, the dot (\texttt{.}) represents your current local directory.
+
+\subsection{Working with Directories in the Terminal}
+\label{subsec:working-directories}
+
+In both \texttt{scp} examples above, the file name refers to a file located in your
+\emph{current working directory}. You can usually identify this directory by
+looking at your terminal prompt.
+
+For example:
+\begin{codeblock}
+[username@mycomputer:~/Desktop/test]$
+\end{codeblock}
+
+This indicates that your current directory is:
+\begin{codeblock}
+~/Desktop/test
+\end{codeblock}
+
+You can explicitly check your current directory using:
+
+\paragraph{On Linux or macOS:}
+\begin{codeblock}
+pwd
+\end{codeblock}
+
+This prints something like:
+\begin{codeblock}
+/home/username/Desktop/test
+\end{codeblock}
+
+\paragraph{On Windows (PowerShell):}
+\begin{codeblock}
+cd
+\end{codeblock}
+
+Understanding your current directory is essential to avoid copying the wrong files
+or encountering \texttt{file not found} errors.
+
+\subsection{Cloning a GitHub Repository}
+\label{subsec:git-clone}
+
+Instead of manually transferring files, it is often easier to store your project
+code in a GitHub repository and clone it directly on the cluster.
+
+\subsubsection{Example: Cloning a Repository}
+
+After logging into the cluster, run:
+
+\begin{codeblock}
+git clone https://github.com/emenriquez/testTFForSlurm
+\end{codeblock}
+
+This creates a new directory called \texttt{testTFForSlurm} containing the full
+repository.
+
+Advantages of using GitHub:
+\begin{itemize}
+  \item Version control and change tracking.
+  \item Easy synchronization across multiple machines.
+  \item Clean separation between code and large datasets.
+\end{itemize}
+
+\subsection{Recommended Best Practices}
+\label{subsec:file-transfer-best-practices}
+
+\begin{itemize}
+  \item Use \texttt{scp} for small files, configuration files, and quick transfers.
+  \item Use GitHub for project code and scripts.
+  \item Avoid transferring very large datasets via \texttt{scp}; instead, place them
+        directly on shared cluster storage if available.
+  \item Keep your home directory organized (e.g., \texttt{projects/}, \texttt{data/}, \texttt{results/}).
+\end{itemize}
+
+These practices help ensure efficient workflows and reduce errors when working
+between your local system and the CRADLE cluster.
+% ======================================================================================================
+
 
 \section{Cloning a Shared TensorFlow Environment}
 \label{sec:clone-env}
@@ -1052,12 +1188,502 @@ echo "==== memory ===="
 free -h
 \end{codeblock}
 
+
+
+
+
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{5pt}
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Aspect} 
+& \textbf{CPU} 
+& \textbf{Single GPU} 
+& \textbf{DataParallel (DP)} 
+& \textbf{DistributedDataParallel (DDP)} \\
+\midrule
+Hardware & CPU cores only & 1 GPU & Multiple GPUs (1 node) & Multiple GPUs (1+ nodes) \\
+Processes & 1 & 1 & 1 & 1 per GPU \\
+GPU usage & None & Full single GPU & Automatic batch split & Explicit per-rank GPU \\
+Multi-node support & No & No & No & Yes \\
+Performance & Slowest & Fast & Medium & Fastest \\
+Scalability & Poor & Limited & Limited & Excellent \\
+Communication & None & None & CPU-based gather/scatter & NCCL all-reduce \\
+Gradient sync & N/A & N/A & Implicit (inefficient) & Explicit (efficient) \\
+Memory efficiency & High & Medium & Low (replication overhead) & High \\
+Fault isolation & N/A & N/A & Poor & Good \\
+Code complexity & Very low & Low & Low & Medium \\
+Launch method & \texttt{python} & \texttt{python} & \texttt{python} & \texttt{torchrun} / \texttt{srun} \\
+Best use case & Debugging, tests & Small models & Prototyping & Large-scale training \\
+Recommended for HPC & No & Limited & No & Yes \\
+\bottomrule
+\end{tabular}%
+}
+
+\caption{Comparison of CPU, single-GPU, DataParallel (DP), and DistributedDataParallel (DDP) execution modes in PyTorch.}
+\label{tab:cpu-gpu-dp-ddp}
+\end{table}
+
+
+
+
+
+% ======================================================================================================
+\section{PyTorch DataParallel (DP) on SLURM}
+\label{sec:dp}
+
+This section describes PyTorch \textbf{DataParallel (DP)}, a simpler multi-GPU
+approach compared to Distributed Data Parallel (DDP).
+DP uses a \emph{single Python process} and automatically splits each batch across
+multiple GPUs on the same node.
+
+\textbf{Important:} DP is suitable for quick experiments on a \emph{single node}
+only. For serious training, large models, or multi-node jobs, prefer DDP
+(Section~\ref{sec:ddp}).
+
+\subsection{When to Use DataParallel}
+\begin{itemize}[leftmargin=*]
+  \item Single node with multiple GPUs.
+  \item Prototyping or debugging multi-GPU behavior.
+  \item Minimal code changes from single-GPU training.
+\end{itemize}
+
+\subsection{When \emph{Not} to Use DataParallel}
+\begin{itemize}[leftmargin=*]
+  \item Multi-node training (DP does not scale across nodes).
+  \item Large models or long training runs (DDP is faster and more stable).
+  \item When precise performance benchmarking matters.
+\end{itemize}
+
+\subsection{Minimal DataParallel Training Skeleton}
+Save as \texttt{train\_dp.py}. This example assumes a single node with multiple GPUs.
+
+\begin{codeblock}[language=python,caption={Minimal PyTorch DataParallel training skeleton (\texttt{train\_dp.py})}]
+import torch
+import torch.nn as nn
+from torch.utils.data import DataLoader
+
+def build_model():
+    # Replace with your FCN / VAE model
+    return nn.Identity()
+
+def build_dataset(split="train"):
+    # Replace with your dataset
+    raise NotImplementedError
+
+def main():
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    model = build_model()
+
+    if torch.cuda.device_count() > 1:
+        print(f"Using DataParallel on {torch.cuda.device_count()} GPUs")
+        model = nn.DataParallel(model)
+
+    model = model.to(device)
+
+    train_ds = build_dataset("train")
+    train_loader = DataLoader(
+        train_ds,
+        batch_size=16,
+        shuffle=True,
+        num_workers=4,
+        pin_memory=True,
+        drop_last=True,
+    )
+
+    optim = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+    model.train()
+    for epoch in range(5):
+        for batch in train_loader:
+            X, Y = batch
+            X = X.to(device, non_blocking=True)
+            Y = Y.to(device, non_blocking=True)
+
+            optim.zero_grad(set_to_none=True)
+            Yhat = model(X)
+            loss = torch.mean((Yhat - Y) ** 2)
+            loss.backward()
+            optim.step()
+
+        print(f"Epoch {epoch} done. loss={loss.item():.6f}")
+
+if __name__ == "__main__":
+    main()
+\end{codeblock}
+
+\subsection{SLURM Script for DataParallel (single node)}
+DP requires \textbf{one Python process only}. Do \emph{not} use \texttt{torchrun}
+or multiple tasks.
+
+\begin{codeblock}[caption={SLURM script for DataParallel (\texttt{dp\_1node.slurm})}]
+#!/bin/bash
+#SBATCH --job-name=dp_1node
+#SBATCH --output=dp_1node.out.%j
+#SBATCH --error=dp_1node.err.%j
+#SBATCH -N 1
+#SBATCH -p kimq
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=8
+#SBATCH --time=04:00:00
+
+echo "Host: \$(hostname)"
+echo "CUDA_VISIBLE_DEVICES: \$CUDA_VISIBLE_DEVICES"
+
+source ~/myEnvs/tf_env/bin/activate
+
+export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK
+
+# Single process only
+python train_dp.py
+
+deactivate
+\end{codeblock}
+
+\subsection{DP vs DDP: Practical Comparison}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Feature & DataParallel (DP) & DistributedDataParallel (DDP) \\
+\midrule
+Processes & 1 total & 1 per GPU \\
+Multi-node support & No & Yes \\
+Performance & Slower & Faster \\
+Scalability & Limited & Excellent \\
+Failure isolation & Poor & Good \\
+Recommended for & Prototyping & Production / research \\
+\bottomrule
+\end{tabular}
+\caption{Comparison between DataParallel and DistributedDataParallel.}
+\end{table}
+
+\subsection{Common DP Pitfalls}
+\begin{itemize}[leftmargin=*]
+  \item Do not combine DP with \texttt{torchrun} or \texttt{srun -n > 1}.
+  \item Expect slower scaling beyond 2–4 GPUs.
+  \item Avoid DP for multi-node jobs.
+  \item Always move the model to GPU \emph{after} wrapping with \texttt{DataParallel}.
+\end{itemize}
+
+\subsection{Rule of Thumb}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{1 node, quick test} $\rightarrow$ DataParallel
+  \item \textbf{Anything serious or multi-node} $\rightarrow$ DDP
+\end{itemize}
+% ======================================================================================================
+
+
+
+% ======================================================================================================
+\section{PyTorch Distributed Data Parallel (DDP) on SLURM}
+\label{sec:ddp}
+
+This section shows a minimal, practical recipe for PyTorch DDP on an HPC cluster.
+DDP runs one Python process per GPU and synchronizes gradients efficiently.
+
+\subsection{What You Need (Checklist)}
+\begin{itemize}[leftmargin=*]
+  \item Request \textbf{multiple GPUs} in SLURM (e.g., \texttt{--gres=gpu:4}).
+  \item Launch with \textbf{\texttt{torchrun}} (recommended) or \texttt{srun} + environment variables.
+  \item In Python: call \texttt{init\_process\_group}, set the per-rank GPU, wrap model with \texttt{DistributedDataParallel}.
+  \item Use \texttt{DistributedSampler} for training (and validation if you want correct global metrics quickly).
+\end{itemize}
+
+\subsection{Minimal DDP Training Skeleton (single file)}
+Save as \texttt{train\_ddp.py}. Replace \texttt{build\_model()}, \texttt{build\_dataset()}, and the loss/optimizer with your own code.
+
+\begin{codeblock}[language=python,caption={Minimal PyTorch DDP training skeleton (\texttt{train\_ddp.py})}]
+import os
+import torch
+import torch.nn as nn
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data import DataLoader
+from torch.utils.data.distributed import DistributedSampler
+
+# -------------------------
+# 1) DDP setup / teardown
+# -------------------------
+def ddp_setup():
+    """
+    Works with: torchrun (sets RANK, LOCAL_RANK, WORLD_SIZE, MASTER_ADDR, MASTER_PORT).
+    """
+    if dist.is_available() and not dist.is_initialized():
+        dist.init_process_group(backend="nccl")  # GPUs -> nccl
+
+    rank = int(os.environ.get("RANK", "0"))
+    local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+    world_size = int(os.environ.get("WORLD_SIZE", "1"))
+
+    if torch.cuda.is_available():
+        torch.cuda.set_device(local_rank)
+        device = torch.device(f"cuda:{local_rank}")
+    else:
+        device = torch.device("cpu")
+
+    return device, rank, local_rank, world_size
+
+def ddp_cleanup():
+    if dist.is_available() and dist.is_initialized():
+        dist.destroy_process_group()
+
+# -------------------------
+# 2) Your builders (replace)
+# -------------------------
+def build_model():
+    # Replace with your FCN/VAE model builder
+    return nn.Identity()
+
+def build_dataset(split="train"):
+    # Replace with your dataset (e.g., CleanImageFolder / PairedImageFolder)
+    # Must return a torch.utils.data.Dataset
+    raise NotImplementedError
+
+# -------------------------
+# 3) Main training loop
+# -------------------------
+def main():
+    device, rank, local_rank, world = ddp_setup()
+    is_ddp = (world > 1)
+
+    model = build_model().to(device)
+    if is_ddp:
+        model = DDP(model, device_ids=[local_rank], output_device=local_rank)
+
+    train_ds = build_dataset("train")
+    train_sampler = DistributedSampler(
+        train_ds, num_replicas=world, rank=rank, shuffle=True
+    ) if is_ddp else None
+
+    train_loader = DataLoader(
+        train_ds,
+        batch_size=16,
+        shuffle=(train_sampler is None),
+        sampler=train_sampler,
+        num_workers=4,
+        pin_memory=True,
+        drop_last=True,
+        persistent_workers=True,
+    )
+
+    optim = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+    for epoch in range(5):
+        if is_ddp:
+            train_sampler.set_epoch(epoch)  # IMPORTANT: different shuffle each epoch
+
+        model.train()
+        for batch in train_loader:
+            # Example batch: (X, Y) for denoising
+            X, Y = batch
+            X = X.to(device, non_blocking=True)
+            Y = Y.to(device, non_blocking=True)
+
+            optim.zero_grad(set_to_none=True)
+            Yhat = model(X)
+            loss = torch.mean((Yhat - Y) ** 2)  # replace with your loss
+            loss.backward()
+            optim.step()
+
+        # Print only from rank 0 (avoids duplicated logs)
+        if rank == 0:
+            print(f"Epoch {epoch} done. loss={loss.item():.6f}")
+
+    ddp_cleanup()
+
+if __name__ == "__main__":
+    main()
+\end{codeblock}
+
+\subsection{SLURM Script for DDP (single node, 4 GPUs)}
+This launches \textbf{one process per GPU} on the same node.
+
+\begin{codeblock}[caption={SLURM script for DDP on 1 node (\texttt{ddp\_1node.slurm})}]
+#!/bin/bash
+#SBATCH --job-name=ddp_1node
+#SBATCH --output=ddp_1node.out.%j
+#SBATCH --error=ddp_1node.err.%j
+#SBATCH -N 1
+#SBATCH -p kimq
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=4
+#SBATCH --time=04:00:00
+
+echo "Host: \$(hostname)"
+echo "Node list: \$SLURM_NODELIST"
+echo "CUDA_VISIBLE_DEVICES: \$CUDA_VISIBLE_DEVICES"
+
+source ~/myEnvs/tf_env/bin/activate
+
+# One process per GPU:
+export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK
+
+# torchrun is recommended.
+# --standalone works for single-node. For multi-node, use rendezvous settings shown below.
+srun torchrun \
+  --standalone \
+  --nproc_per_node=4 \
+  train_ddp.py
+
+deactivate
+\end{codeblock}
+
+\subsection{SLURM Script for DDP (2 nodes, 4 GPUs per node)}
+For multi-node DDP, you need a rendezvous endpoint (master address/port).
+A common pattern is to use the first node in \texttt{\$SLURM\_NODELIST} as the master.
+
+\begin{codeblock}[caption={SLURM script for DDP on 2 nodes (\texttt{ddp\_2node.slurm})}]
+#!/bin/bash
+#SBATCH --job-name=ddp_2node
+#SBATCH --output=ddp_2node.out.%j
+#SBATCH --error=ddp_2node.err.%j
+#SBATCH -N 2
+#SBATCH -p kimq
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=4
+#SBATCH --time=06:00:00
+
+source ~/myEnvs/tf_env/bin/activate
+
+# Pick master node and port
+MASTER_ADDR=\$(scontrol show hostnames "\$SLURM_NODELIST" | head -n 1)
+MASTER_PORT=29500
+
+echo "MASTER_ADDR=\$MASTER_ADDR"
+echo "MASTER_PORT=\$MASTER_PORT"
+
+export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK
+
+# Total processes = nodes * gpus_per_node = 2 * 4 = 8
+srun torchrun \
+  --nnodes=2 \
+  --nproc_per_node=4 \
+  --rdzv_backend=c10d \
+  --rdzv_endpoint=\$MASTER_ADDR:\$MASTER_PORT \
+  train_ddp.py
+
+deactivate
+\end{codeblock}
+
+\subsection{Common DDP Pitfalls (Fast Debug List)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Do not use \texttt{DataParallel} with DDP.} Use one or the other.
+  \item \textbf{Call \texttt{DistributedSampler(...)} for training} and \textbf{call \texttt{set\_epoch(epoch)}} each epoch.
+  \item \textbf{Set the per-process GPU} via \texttt{LOCAL\_RANK} and \texttt{torch.cuda.set\_device(local\_rank)}.
+  \item \textbf{Print/checkpoint only on rank 0} to avoid duplicates and file corruption.
+  \item If validation metrics must be global, either:
+    \begin{itemize}
+      \item use \texttt{DistributedSampler} for validation and \texttt{all\_reduce} metric sums, or
+      \item run validation only on rank 0 (simpler but slower).
+    \end{itemize}
+\end{itemize}
+% ======================================================================================================
+
+
+
+
 % -------------------- Job templates --------------------
 
 \subsection{SLURM Job Templates for Different Resource Requirements}
 \label{subsec:slurm-templates}
 
 This subsection shows full job scripts for common use cases.
+
+
+% ======================================================================================================
+\subsection{Example Commands for File Transfer}
+\label{subsec:file-transfer-examples}
+
+This subsection provides practical, copy-pasteable examples for transferring
+files and directories between your local machine and the CRADLE cluster.
+These commands are typically run from a local terminal, not inside a SLURM job.
+
+\subsubsection{Copying a Single File from Local Machine to CRADLE}
+
+\begin{codeblock}
+scp my_script.py \
+    yourUserName@login.cradle.university.edu:~/projects/
+\end{codeblock}
+
+This copies \texttt{my\_script.py} from your current local directory into
+\texttt{\~{}/projects/} on the cluster.
+
+\subsubsection{Copying a Single File from CRADLE to Local Machine}
+
+\begin{codeblock}
+scp yourUserName@login.cradle.university.edu:~/projects/results.txt \
+    .
+\end{codeblock}
+
+The dot (\texttt{.}) represents your current local directory.
+
+\subsubsection{Copying an Entire Directory to CRADLE}
+
+To recursively copy a directory (for example, a project folder):
+
+\begin{codeblock}
+scp -r myProjectFolder/ \
+    yourUserName@login.cradle.university.edu:~/projects/
+\end{codeblock}
+
+This creates \texttt{\~{}/projects/myProjectFolder/} on the cluster.
+
+\subsubsection{Copying an Entire Directory from CRADLE to Local Machine}
+
+\begin{codeblock}
+scp -r yourUserName@login.cradle.university.edu:~/projects/myProjectFolder/ \
+    ~/Desktop/
+\end{codeblock}
+
+This downloads the entire project directory to your local desktop.
+
+\subsubsection{Transferring Job Output After Completion}
+
+After a SLURM job finishes, you often want to retrieve output files such as logs
+or trained models.
+
+\begin{codeblock}
+scp yourUserName@login.cradle.university.edu:~/slurm_outputs/myJob.out.123456 \
+    .
+\end{codeblock}
+
+Here, \texttt{123456} is the SLURM job ID.
+
+\subsubsection{Copying Files Using Wildcards}
+
+You can use wildcards to transfer multiple files at once:
+
+\begin{codeblock}
+scp yourUserName@login.cradle.university.edu:~/slurm_outputs/*.out.* \
+    .
+\end{codeblock}
+
+This copies all SLURM output files in the directory.
+
+\subsubsection{Recommended Workflow with SLURM Jobs}
+
+A typical workflow looks like this:
+\begin{enumerate}
+  \item Copy scripts to CRADLE using \texttt{scp} or \texttt{git clone}.
+  \item Submit the job using \texttt{sbatch}.
+  \item Monitor the job with \texttt{squeue}.
+  \item Copy results back to your local machine using \texttt{scp}.
+\end{enumerate}
+
+\paragraph{Important Note:}
+File transfers should generally be performed from the \emph{login node},
+not from inside running compute jobs, unless explicitly required.
+% ======================================================================================================
+
 
 \subsubsection{Single Node, CPU-Only Job}
 \label{subsubsec:cpu-only-job}
