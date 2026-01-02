@@ -380,3 +380,15 @@ gpu_device_ids = [0, 1]  # max 2 GPUs
 
 
 
+# Save dictionary as json preserving the order ****************************************************************
+import json
+print(json.dumps(final_metrics, indent=2, sort_keys=False))
+with open("final_metrics.json", "w") as f:
+    json.dump(final_metrics, f, sort_keys=False, indent=2)
+
+#_______________________________________________________________________________
+
+
+
+
+
