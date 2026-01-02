@@ -356,14 +356,27 @@ if torch.cuda.is_available():
 model = model.to(device)
 # train as usual
 
-# Limit GPUs inside code (device_ids)
-use_gpus = [0, 1]  # max 2 GPUs
+# Limit GPUs inside code (device_ids) ___________________
+gpu_device_ids = [0, 1]  # max 2 GPUs
 
-if torch.cuda.is_available():
-    model = nn.DataParallel(model, device_ids=use_gpus)
-    device = torch.device(f"cuda:{use_gpus[0]}")
-    model = model.to(device)
+    # ---- decide device + optional DataParallel ----
+    if torch.cuda.is_available() and device != "cpu":
+        # If user didn't specify, default to "all visible GPUs"
+        if gpu_device_ids is None:
+            gpu_device_ids = list(range(torch.cuda.device_count()))
+
+        # Primary device is the first id
+        device = torch.device(f"cuda:{gpu_device_ids[0]}")
+        model = model.to(device)
+
+        # Only wrap if using 2+ GPUs
+        if len(gpu_device_ids) > 1:
+            model = nn.DataParallel(model, device_ids=gpu_device_ids)
+    else:
+        device = torch.device("cpu")
+        model = model.to(device)
 #_______________________________________________________________________________
+
 
 
 
