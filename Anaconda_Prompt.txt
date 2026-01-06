@@ -623,6 +623,22 @@ else:
     model, device_t, rank, world, is_ddp = setup_device_and_model(model, run_mode)
 
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+# Kernel Command
+torchrun \
+  --nnodes=1 \
+  --nproc_per_node=10 \
+  train.py \
+  --epochs 100 \
+  --n-trials 50 \
+  --n-trials-main-model 100 \
+  --pbar-interval 100 \
+  --train-epochs 500 \
+  --run-mode ddp \
+  --compile-train \
+  --train-time-pkl train_time_ddp
+
 #_______________________________________________________________________________
 
 
@@ -635,6 +651,7 @@ with open("final_metrics.json", "w") as f:
     json.dump(final_metrics, f, sort_keys=False, indent=2)
 
 #_______________________________________________________________________________
+
 
 
 
