@@ -447,31 +447,31 @@ def setup_device_and_model(model, mode: str):
 
 
 
-# --------
+# <<<--------
 # -----------------------------
 # Decide runtime run_mode & wrap BEFORE loaders (DDP needs sampler)
 # -----------------------------
-
 if run_mode == "dp":
     if not torch.cuda.is_available():
-        raise RuntimeError("active_dp=True but CUDA is not available.")
+        raise RuntimeError("run_mode='dp' but CUDA is not available.")
     if gpu_device_ids is None:
         gpu_device_ids = list(range(torch.cuda.device_count()))
     if len(gpu_device_ids) == 0:
-        raise RuntimeError("active_dp=True but no CUDA devices found.")
+        raise RuntimeError("run_mode='dp' but no CUDA devices found.")
 
     device_t = torch.device(f"cuda:{gpu_device_ids[0]}")
     model = model.to(device_t)
-    if len(gpu_device_ids) > 1:
-        model = nn.DataParallel(model, device_ids=gpu_device_ids)
 
-    rank, world = 0, 1
-    is_ddp = False
+    if len(gpu_device_ids) > 1:
+        model = nn.DataParallel(model, device_ids=gpu_device_ids, output_device=gpu_device_ids[0])
+
+    rank, world, is_ddp = 0, 1, False
 
 else:
-    # This should init process group + move to correct device + wrap for DDP if needed
+    # cpu / cuda / ddp
     device_t, model, is_ddp, rank, world = setup_device_and_model(model, run_mode)
-# --------
+
+# -------->>>
 
 #_______________________________________________________________________________
 
@@ -485,6 +485,7 @@ with open("final_metrics.json", "w") as f:
     json.dump(final_metrics, f, sort_keys=False, indent=2)
 
 #_______________________________________________________________________________
+
 
 
 
