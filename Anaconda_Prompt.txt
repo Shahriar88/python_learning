@@ -375,6 +375,104 @@ gpu_device_ids = [0, 1]  # max 2 GPUs
     else:
         device = torch.device("cpu")
         model = model.to(device)
+
+
+
+# Function ***** --------***************************
+import os
+import torch
+import torch.distributed as dist
+from torch.utils.data.distributed import DistributedSampler
+from torch.nn.parallel import DistributedDataParallel as DDP
+
+def is_ddp_run(mode: str) -> bool:
+    world = int(os.environ.get("WORLD_SIZE", "1"))
+    return (mode == "ddp") and (world > 1)
+
+def ddp_cleanup():
+    if dist.is_available() and dist.is_initialized():
+        # Optional: barrier can hang if a rank crashed. Use with care.
+        # dist.barrier()
+        dist.destroy_process_group()
+
+def setup_device_and_model(model, mode: str):
+    """
+    mode: "cpu" | "cuda" | "ddp"
+      - "dp" is handled OUTSIDE this function
+      - "ddp" requires: torchrun --nproc_per_node=N script.py
+
+    Returns: device_t, model, is_ddp, rank, world
+
+    run_mode = "cpu"   # force CPU
+    run_mode = "cuda"  # single GPU (or CPU fallback)
+    run_mode = "dp"    # DataParallel (handled outside setup_device_and_model)
+    run_mode = "ddp"   # DistributedDataParallel (torchrun required)
+
+    """
+    world_env = int(os.environ.get("WORLD_SIZE", "1"))
+    is_ddp = (mode == "ddp") and (world_env > 1)
+
+    if is_ddp:
+        want_cuda = torch.cuda.is_available()
+        backend = "nccl" if want_cuda else "gloo"
+
+        if not dist.is_initialized():
+            dist.init_process_group(backend=backend)
+
+        rank = dist.get_rank()
+        world = dist.get_world_size()
+
+        if want_cuda:
+            local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+            torch.cuda.set_device(local_rank)
+            device_t = torch.device(f"cuda:{local_rank}")
+            model = model.to(device_t)
+            model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=False)
+        else:
+            device_t = torch.device("cpu")
+            model = model.to(device_t)
+            model = DDP(model)
+
+        return device_t, model, True, rank, world
+
+    # Single-process CPU/CUDA (and also DP wrapper happens outside)
+    rank, world = 0, 1
+    if mode == "cpu":
+        device_t = torch.device("cpu")
+    else:  # "cuda" or anything else -> use cuda if available
+        device_t = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    model = model.to(device_t)
+    return device_t, model, False, rank, world
+
+
+
+# --------
+# -----------------------------
+# Decide runtime run_mode & wrap BEFORE loaders (DDP needs sampler)
+# -----------------------------
+
+if run_mode == "dp":
+    if not torch.cuda.is_available():
+        raise RuntimeError("active_dp=True but CUDA is not available.")
+    if gpu_device_ids is None:
+        gpu_device_ids = list(range(torch.cuda.device_count()))
+    if len(gpu_device_ids) == 0:
+        raise RuntimeError("active_dp=True but no CUDA devices found.")
+
+    device_t = torch.device(f"cuda:{gpu_device_ids[0]}")
+    model = model.to(device_t)
+    if len(gpu_device_ids) > 1:
+        model = nn.DataParallel(model, device_ids=gpu_device_ids)
+
+    rank, world = 0, 1
+    is_ddp = False
+
+else:
+    # This should init process group + move to correct device + wrap for DDP if needed
+    device_t, model, is_ddp, rank, world = setup_device_and_model(model, run_mode)
+# --------
+
 #_______________________________________________________________________________
 
 
@@ -387,6 +485,7 @@ with open("final_metrics.json", "w") as f:
     json.dump(final_metrics, f, sort_keys=False, indent=2)
 
 #_______________________________________________________________________________
+
 
 
 
