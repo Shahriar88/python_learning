@@ -574,7 +574,7 @@ def setup_device_and_model(model, mode: str):
 
     # move / wrap 
     Example: ******************************
-    device, model, is_ddp, rank, world = setup_device_and_model(model, mode=run_mode)
+    model, device_t, rank, world, is_ddp  = setup_device_and_model(model, mode=run_mode)
 
     """
     world_env = int(os.environ.get("WORLD_SIZE", "1"))
@@ -601,7 +601,7 @@ def setup_device_and_model(model, mode: str):
             model = model.to(device_t)
             model = DDP(model)
 
-        return device_t, model, True, rank, world
+        return model, device_t, rank, world, True
 
     # Single-process CPU/CUDA (and also DP wrapper happens outside)
     rank, world = 0, 1
@@ -611,7 +611,8 @@ def setup_device_and_model(model, mode: str):
         device_t = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     model = model.to(device_t)
-    return device_t, model, False, rank, world
+    return model, device_t, rank, world, False
+
 
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -627,6 +628,7 @@ with open("final_metrics.json", "w") as f:
     json.dump(final_metrics, f, sort_keys=False, indent=2)
 
 #_______________________________________________________________________________
+
 
 
 
