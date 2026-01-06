@@ -614,10 +614,15 @@ def setup_device_and_model(model, mode: str):
     model = model.to(device_t)
     return model, device_t, rank, world, False
 
-
-
-
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+## Model to device
+if run_mode == "dp":
+    model, device_t, rank, world, is_ddp = setup_dp_model(model, gpu_device_ids)
+else:
+    model, device_t, rank, world, is_ddp = setup_device_and_model(model, run_mode)
+
+
 #_______________________________________________________________________________
 
 
@@ -630,6 +635,7 @@ with open("final_metrics.json", "w") as f:
     json.dump(final_metrics, f, sort_keys=False, indent=2)
 
 #_______________________________________________________________________________
+
 
 
 
