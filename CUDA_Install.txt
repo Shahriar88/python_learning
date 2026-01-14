@@ -18,6 +18,8 @@ conda activate rf
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 or
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+or 
+pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
 or
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu114
 
@@ -83,6 +85,7 @@ Verify the current state of torch:________________________________
 print(model.training)
 print(torch.is_grad_enabled())
 print(torch.is_inference_mode_enabled())
+
 
 
 
