@@ -657,6 +657,49 @@ with open("final_metrics.json", "w") as f:
 
 
 
+# Windows Ubuntu Speak ****************************************************************
+# pip install pywin32
+
+# sudo apt update
+# sudo apt install espeak-ng
+# espeak "Hello world"
+
+import sys
+import threading
+import subprocess
+
+_tts_lock = threading.Lock()
+
+if sys.platform.startswith("win"):
+    import win32com.client as wincl
+    _speaker = wincl.Dispatch("SAPI.SpVoice")
+    _speaker.Rate = 0       # -10 .. +10
+    _speaker.Volume = 100   # 0 .. 100
+
+    def speak_text(text: str):
+        if not text:
+            return
+        with _tts_lock:
+            print("Speaking:", text, flush=True)
+            _speaker.Speak(text)
+
+elif sys.platform.startswith("linux"):
+    def speak_text(text: str, rate=150, volume=100):
+        if not text:
+            return
+        with _tts_lock:
+            print("Speaking:", text, flush=True)
+            subprocess.run([
+                "espeak",
+                f"-s{rate}",
+                f"-a{volume}",
+                text
+            ])
+
+else:
+    def speak_text(text: str):
+        print("TTS not supported on this OS:", text)
+#_______________________________________________________________________________
 
 
 
