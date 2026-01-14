@@ -704,5 +704,26 @@ else:
 
 
 
+# argparse example ****************************************************************
+
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="BlindHelp camera client"
+    )
+
+    parser.add_argument(
+        "--source",
+        choices=["esp32", "webcam"],
+        default="esp32",
+        help="Video source: esp32 (MJPEG over WiFi) or webcam (OpenCV)"
+    )
+
+    # Important for Spyder / IPython: ignore unknown args
+    args, _ = parser.parse_known_args()
+    return args
+#_______________________________________________________________________________
+
 
 
