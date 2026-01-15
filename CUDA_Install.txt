@@ -1,3 +1,4 @@
+python -m pip install --upgrade pip
 
 NVIDIA-smi
 
@@ -85,6 +86,7 @@ Verify the current state of torch:________________________________
 print(model.training)
 print(torch.is_grad_enabled())
 print(torch.is_inference_mode_enabled())
+
 
 
 
