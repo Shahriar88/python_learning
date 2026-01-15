@@ -1,6 +1,8 @@
 # Update Conda, setuptools ________________________________________________________________________________________
 conda update -n base -c defaults conda
 
+python -m pip install --upgrade pip
+
 pip install -U pip setuptools wheel
 or
 python.exe -m pip install -U pip setuptools wheel
@@ -724,6 +726,7 @@ def parse_args():
     args, _ = parser.parse_known_args()
     return args
 #_______________________________________________________________________________
+
 
 
 
