@@ -228,6 +228,7 @@ sudo apt install ./argos3_simulator-3.0.0-x86_64-beta59.deb
 
 
 # Install app on Linux *********************************************
+ls
 sudo chmod +x filename.sh
 sudo apt install filename.sh
 
@@ -730,6 +731,7 @@ def parse_args():
     args, _ = parser.parse_known_args()
     return args
 #_______________________________________________________________________________
+
 
 
 
