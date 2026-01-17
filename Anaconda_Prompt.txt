@@ -220,6 +220,8 @@ jupyter server --ServerApp.allow_origin='https://colab.research.google.com' --po
 #_______________________________________________________________________________
 
 # Install ARGoS *********************************************
+https://releases.ubuntu.com/focal/
+
 https://www.argos-sim.info/core.php
 
 Binary Packages for Ubuntu 22.04 LTS 64bit
@@ -731,6 +733,7 @@ def parse_args():
     args, _ = parser.parse_known_args()
     return args
 #_______________________________________________________________________________
+
 
 
 
