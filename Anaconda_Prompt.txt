@@ -101,7 +101,7 @@ pip install numba
 
 
 *******************************************************************************
-# Clone Environment __________________________________________
+# Clone Environment Copy Enviroment__________________________________________
 # from the working env
 conda activate rf
 conda env export --no-builds > rf.yml
@@ -111,6 +111,38 @@ conda create --name new_env --clone old_env
 
 # on the new machine/env
 conda env create -f rf.yml -n rf_NEW
+
+
+
+# show them all =======
+pip list
+pip list --format=columns
+
+# Save requirements file
+pip freeze > requirements.txt
+# Install from requirements file
+pip install -r requirements.txt
+## Verbose
+pip install -r requirements.txt -v
+## Isolate
+pip install --no-cache-dir -r requirements.txt
+
+
+# Remove torch from requirements ****
+pip install -r requirements.txt --no-deps
+
+# Or generate a filtered file:*****
+
+## linux
+grep -v torch requirements.txt > requirements_notorch.txt
+## windows
+findstr /v /i torch requirements.txt > requirements_notorch.txt
+
+pip install -r requirements_notorch.txt
+
+
+
+
 
 
 
@@ -738,6 +770,7 @@ def parse_args():
 select disk 1/2/3
 attribute disk clear/set readonly
 #_______________________________________________________________________________
+
 
 
 
