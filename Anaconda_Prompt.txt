@@ -111,11 +111,15 @@ conda create --name new_env --clone old_env
 
 # on the new machine/env
 conda env create -f rf.yml -n rf_NEW
+#----Good----
 
 
 
+
+# Just Get the list --> Not good for clone ---
+# Need to test ----
 # show them all =======
-pip list
+pip list > requirements.txt
 pip list --format=columns
 
 # Save requirements file
@@ -773,6 +777,7 @@ def parse_args():
 select disk 1/2/3
 attribute disk clear/set readonly
 #_______________________________________________________________________________
+
 
 
 
