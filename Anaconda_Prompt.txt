@@ -137,6 +137,8 @@ pip install -r requirements.txt --no-deps
 grep -v torch requirements.txt > requirements_notorch.txt
 ## windows
 findstr /v /i torch requirements.txt > requirements_notorch.txt
+findstr /OFFLINE /v /i torch requirements.txt > requirements_notorch.txt
+
 
 pip install -r requirements_notorch.txt
 
@@ -770,6 +772,7 @@ def parse_args():
 select disk 1/2/3
 attribute disk clear/set readonly
 #_______________________________________________________________________________
+
 
 
 
