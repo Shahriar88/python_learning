@@ -1,6 +1,17 @@
 # Update Conda, setuptools ________________________________________________________________________________________
 conda update -n base -c defaults conda
 
+# If you want to see the current lib path
+conda config --show envs_dirs
+
+# If you want to add a new folder with lib path
+conda config --add envs_dirs C:\conda\envs
+
+# create new environment on a specific directory
+conda create -p C:\conda\envs\isaac python=3.11 -y
+
+
+
 python -m pip install --upgrade pip
 
 pip install -U pip setuptools wheel
@@ -818,6 +829,7 @@ Example Run training:
     --headless
 
 #_______________________________________________________________________________
+
 
 
 
