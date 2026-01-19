@@ -785,6 +785,44 @@ attribute disk clear/set readonly
 
 
 
+# Run Linux command on Windows ============================================
+1. Open powershell as Admin
+2. run: wsl --install -d Ubuntu
+3. Reboot if prompted
+4. Open normal PowerShell
+5. run: wsl
+6. uname -a
+7. Update Ubuntu packages: sudo apt update && sudo apt upgrade -y
+8. Install basic dependencies: sudo apt install -y git wget curl build-essential
+9. Install Miniconda (Linux): wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+10. Run installer:: bash Miniconda3-latest-Linux-x86_64.sh
+11. Reload shell:: source ~/.bashrc
+12. Verify: conda --version
+
+## Create a Conda environment for Isaac Lab =======================
+conda create -n isaaclab python=3.10 -y
+conda activate isaaclab
+
+cd ~
+git clone https://github.com/NVIDIA-Omniverse/IsaacLab.git
+
+cd IsaacLab
+./isaaclab.sh --install
+Verify installation: ./isaaclab.sh --check
+CUDA check: python -c "import torch; print(torch.cuda.is_available())"
+
+Example Run training:
+~/IsaacLab/isaaclab.sh -p scripts/train.py \
+    --algorithm PPO \
+    --num-envs 128 \
+    --headless
+
+#_______________________________________________________________________________
+
+
+
+
+
 
 
 
