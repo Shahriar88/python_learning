@@ -882,6 +882,15 @@ C:\conda\IsaacLab\isaaclab.bat -p scripts\tutorials\00_sim\create_empty.py
 #_______________________________________________________________________________
 
 
+# Show / Hide Warning ==========================================
+import warnings
+warnings.simplefilter("default")  # show all warnings clearly
+
+import warnings
+warnings.filterwarnings("ignore")
+
+#___________________________________________________________________________________
+
 
 
 
