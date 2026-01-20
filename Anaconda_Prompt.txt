@@ -833,6 +833,54 @@ Example Run training:
 
 
 
+#================================================================================================
+# Install / Use Isaac Sim + Isaac Lab on Windows ================================================
+#================================================================================================
+# Date: Jan 19, 2026
+# Source:
+https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/pip_installation.html
+
+# Note (Python version must match Isaac Sim):====
+# Isaac Sim 5.X -> Python 3.11
+# Isaac Sim 4.X -> Python 3.10
+
+# Enable Windows Long Paths (recommended)=====
+Regedit -> HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem
+LongPathsEnabled (REG_DWORD) = 1
+(Reboot)
+
+# Anaconda Prompt=====
+# Prefer short paths to avoid Windows path-length issues
+mkdir C:\conda
+mkdir C:\conda\envs
+
+conda create -p C:\conda\envs\isaaclab python=3.11 -y
+conda activate C:\conda\envs\isaaclab
+
+python -m pip install --upgrade pip
+
+# Install PyTorch CUDA build (keep versions aligned)
+pip install -U torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 ^
+  --index-url https://download.pytorch.org/whl/cu128
+
+# Install Isaac Sim (pip)
+pip install "isaacsim[all,extscache]==5.1.0" --extra-index-url https://pypi.nvidia.com
+
+# Clone Isaac Lab (use a short folder; avoid OneDrive)
+cd C:\conda
+git clone https://github.com/isaac-sim/IsaacLab.git
+
+# Install Isaac Lab components
+C:\conda\IsaacLab\isaaclab.bat --install rl_games
+# or full:
+C:\conda\IsaacLab\isaaclab.bat --install
+
+# Verify
+C:\conda\IsaacLab\isaaclab.bat -p scripts\tutorials\00_sim\create_empty.py
+
+#___________________________________________________________________________________
+#_______________________________________________________________________________
+
 
 
 
