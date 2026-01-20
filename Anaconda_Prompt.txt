@@ -884,12 +884,17 @@ C:\conda\IsaacLab\isaaclab.bat -p scripts\tutorials\00_sim\create_empty.py
 
 # Show / Hide Warning ==========================================
 import warnings
-warnings.simplefilter("default")  # show all warnings clearly
+warnings.simplefilter("default")
+def _warn_to_print(message, category, filename, lineno, file=None, line=None):
+    print(f"[WARNING] {category.__name__}: {message}  ({filename}:{lineno})")
+warnings.showwarning = _warn_to_print
+
+
 
 import warnings
 warnings.filterwarnings("ignore")
-
 #___________________________________________________________________________________
+
 
 
 
