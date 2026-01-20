@@ -786,6 +786,23 @@ def parse_args():
     # Important for Spyder / IPython: ignore unknown args
     args, _ = parser.parse_known_args()
     return args
+
+######################
+import argparse
+def parse_args():
+    parser = argparse.ArgumentParser(description="RL training launcher")
+
+    parser.add_argument(
+        "--run_training_now",
+        action="store_true",
+        help="Run training immediately (default: False)",
+    )
+
+    # Spyder / IPython safe
+    args, _ = parser.parse_known_args()
+    return args
+
+args = parse_args()
 #_______________________________________________________________________________
 
 # Diskpart make usb readonly ============================================
@@ -894,6 +911,7 @@ warnings.showwarning = _warn_to_print
 import warnings
 warnings.filterwarnings("ignore")
 #___________________________________________________________________________________
+
 
 
 
