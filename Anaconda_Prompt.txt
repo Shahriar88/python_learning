@@ -900,6 +900,14 @@ C:\conda\IsaacLab\isaaclab.bat --install
 # Verify
 C:\conda\IsaacLab\isaaclab.bat -p scripts\tutorials\00_sim\create_empty.py
 
+
+# Usage =============================
+IsaacLab\isaaclab.bat -p "C:\conda\scripts\train2.py" ^
+    --algorithm PPO ^
+    --num-envs 128 ^
+    --headless
+or
+IsaacLab\isaaclab.bat -p "C:\conda\WarehouseBenchmark\scripts\train.py" --algorithm PPO --num-envs 128 --headless
 #___________________________________________________________________________________
 #_______________________________________________________________________________
 
@@ -916,6 +924,7 @@ warnings.showwarning = _warn_to_print
 import warnings
 warnings.filterwarnings("ignore")
 #___________________________________________________________________________________
+
 
 
 
