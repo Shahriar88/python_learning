@@ -234,6 +234,7 @@ pip install kaggle
 
 
 # GPU ************************
+# Nvidia Driver: https://www.nvidia.com/en-us/drivers/
 nvidia-smi
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
@@ -924,6 +925,7 @@ warnings.showwarning = _warn_to_print
 import warnings
 warnings.filterwarnings("ignore")
 #___________________________________________________________________________________
+
 
 
 
