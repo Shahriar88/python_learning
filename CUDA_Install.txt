@@ -16,15 +16,7 @@ conda create -n rf python=3.12 -y
 conda activate rf
 
 
-pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
-or
-pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-or 
-pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
-or
-pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu114
 
-pip install tensorboard
 
 pip install tqdm ipywidgets jupyterlab_widgets
 
@@ -45,7 +37,20 @@ conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotli
 
 
 
+#==============================
+# CUDA ========================
+# For more Anaconda troubleshooting, tips--> https://github.com/Shahriar88/python_learning/blob/main/Anaconda_Prompt.txt
+#===============================
 
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
+or
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+or 
+pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
+or
+pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu114
+
+pip install tensorboard
 
 
 
@@ -86,6 +91,7 @@ Verify the current state of torch:________________________________
 print(model.training)
 print(torch.is_grad_enabled())
 print(torch.is_inference_mode_enabled())
+
 
 
 
