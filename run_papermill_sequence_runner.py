@@ -9,7 +9,7 @@ Created on Sun Nov  2 21:46:22 2025
 
 If you want to input arguments then add first code cell like this:
 *** Add Cell Tags: parameters by jupyterlab
-*** Try to avoid tuply (), use list [] for parameters if possible
+*** Try to avoid tuple (), use list [] for parameters if possible
 
 # Parameters
 run_name = "default_run"
@@ -227,6 +227,7 @@ print(f"\n=== All notebooks completed at {datetime.now():%Y-%m-%d %H:%M:%S} ==="
 
 #________________________________________________________________________________________________________________________________
 #%%
+
 
 
 
