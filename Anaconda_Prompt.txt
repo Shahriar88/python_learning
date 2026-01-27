@@ -991,6 +991,7 @@ pip install --force-reinstall --no-cache-dir  torch==2.6.0 torchvision==0.21.0 t
 
 pip install --no-cache-dir --force-reinstall  tensorboard
 pip install --no-cache-dir  --force-reinstall pycocotools
+pip install papermill
 
 jupyter notebook
 
@@ -1008,6 +1009,7 @@ python run_installs.py install_steps.txt
 #==============================================================
 #==============================================================
 #==============================================================
+
 
 
 
