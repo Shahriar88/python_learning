@@ -1,3 +1,5 @@
+https://pytorch.org/get-started/previous-versions/     # torch cuda -> try pip code for your gpu cuda (nvidia-smi) version
+
 python -m pip install --upgrade pip
 
 NVIDIA-smi
@@ -40,6 +42,7 @@ conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotli
 #==============================
 # CUDA ========================
 # For more Anaconda troubleshooting, tips--> https://github.com/Shahriar88/python_learning/blob/main/Anaconda_Prompt.txt
+# https://pytorch.org/get-started/previous-versions/     # torch cuda -> try pip code for your gpu cuda (nvidia-smi) version
 #===============================
 
 pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
@@ -153,6 +156,8 @@ pip install --no-cache-dir --force-reinstall opencv-python
 
 conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
 
+
+# https://pytorch.org/get-started/previous-versions/     # torch cuda -> try pip code for your gpu cuda (nvidia-smi) version
 pip install --force-reinstall --no-cache-dir  torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0  --index-url https://download.pytorch.org/whl/cu124
 
 pip install --no-cache-dir --force-reinstall  tensorboard
@@ -174,6 +179,7 @@ python run_installs.py install_steps.txt
 #==============================================================
 #==============================================================
 #==============================================================
+
 
 
 
