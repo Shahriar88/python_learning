@@ -1,5 +1,6 @@
 https://pypi.org/project/torch/
 https://pytorch.org/get-started/previous-versions/     # torch cuda -> try pip code for your gpu cuda (nvidia-smi) version
+https://download.pytorch.org/whl  # lots of wheel are avaialable torch+cuda
 
 # Update Conda, setuptools ________________________________________________________________________________________
 conda update -n base -c defaults conda
@@ -1012,6 +1013,7 @@ python run_installs.py install_steps.txt
 #==============================================================
 #==============================================================
 #==============================================================
+
 
 
 
