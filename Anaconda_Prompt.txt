@@ -1017,6 +1017,171 @@ python run_installs.py install_steps.txt
 
 
 
+#==============================================================
+# SSH Remote Login from Terminal ==============================
+For windows:
+ssh -L 13389:localhost:3389 user@ip
+for Linux:
+ssh -L 3389:localhost:3389 user@ip
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
+#===============================================================
+#===============================================================
+#===============================================================
+#==============================================================
+# Linux Ubuntu Command ==============================
+
+# Change Directory =============
+cd folder_name
+cd ..        # one level up
+cd ~         # home directory
+cd /         # root
+pwd          # show current directory
+
+
+# List files and folders =============
+ls
+ls -l        # long format (permissions, owner, size)
+ls -a        # include hidden files
+ls -lh       # human-readable sizes
+ls -lt       # sort by time
+
+
+# Ubuntu Version: ============= 
+lsb_release -a
+
+# Create / remove =============
+mkdir folder_name
+mkdir -p a/b/c        # create nested directories
+
+rm file.txt
+rm -r folder_name     # recursive delete
+rm -rf folder_name    # force delete (dangerous)
+
+# File Viewing and Editing ========
+# View file contents
+cat file.txt          # print entire file
+less file.txt         # scrollable view
+head file.txt         # first 10 lines
+tail file.txt         # last 10 lines
+tail -f logfile.log   # follow live logs
+
+
+# File info =============
+stat file.txt
+file file.txt         # detect file type
+du -sh folder_name    # disk usage
+df -h                 # filesystem usage
+
+
+# Searching =============
+# Find files
+find . -name "*.py"
+find / -type f -size +100M
+
+#earch inside files
+grep "pattern" file.txt
+grep -r "pattern" folder/
+grep -i "pattern" file.txt   # case-insensitive
+
+
+# Permissions and Ownership =======
+# Permissions
+ls -l
+chmod 755 script.sh     # rwx r-x r-x
+chmod +x script.sh      # add execute permission
+chmod +r script.sh      # add read permission
+chmod +w script.sh      # add write permission
+
+chmod u+x script.sh   # user only
+chmod g+x script.sh   # group only
+chmod o+x script.sh   # others only
+chmod a+x script.sh   # all (same as +x)
+
+
+
+
+# Ownership ========
+chown user file.txt
+chown user:group file.txt
+
+# Processes and System Monitoring ====
+# View running processes
+ps aux
+top
+htop       # if installed (recommended)
+
+# Find a process ======
+ps aux | grep python
+pgrep python
+
+kill PID
+kill -15 PID     # SIGTERM (default, graceful)
+kill -2 PID      # SIGINT (Ctrl+C)
+kill -9 PID      # SIGKILL (force)
+kill -19 PID     # SIGSTOP (pause)
+kill -18 PID     # SIGCONT (resume)
+
+
+# Networking ======
+# Check open ports
+ss -lntp
+netstat -tulpn
+
+# Test connectivity ======
+ping google.com
+curl http://example.com
+wget http://example.com/file
+
+
+# SSH ===================
+ssh user@host
+scp file.txt user@host:/path
+rsync -av folder/ user@host:/path
+
+
+# System Information =======
+# OS and kernel
+lsb_release -a
+uname -a
+hostnamectl
+
+
+# Hardware =========
+lscpu
+lsmem
+lsblk
+free -h
+
+
+# GPU (NVIDIA) ========
+nvidia-smi
+
+
+# Package Management (Ubuntu / Debian) =======
+sudo apt update
+sudo apt upgrade
+sudo apt install package_name
+sudo apt remove package_name
+apt list --upgradable
+
+
+# Environment and Shell =========
+# Environment variables
+env
+echo $PATH
+export VAR=value
+
+
+# History =====
+history
+!123        # run command number 123
+
+
+#===============================================================
+#===============================================================
+#===============================================================
+#===============================================================
