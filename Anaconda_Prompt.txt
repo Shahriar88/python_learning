@@ -409,7 +409,67 @@ print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
 
 
-# Use multiple GPUs ****************************************************************
+
+# Tesla K80 Troubleshooting ==============================================
+# You can use either one of the setting for torch and cuda
+
+#=====================================
+#*************************************
+# GPU TESLA K80, Ubuntu 20.04.6 LTS Anaconda3-2025.12-1-Linux-x86_64.sh  
+#conda create --name mask_rcnn2 python=3.10 -y
+#conda activate mask_rcnn2
+# Passed GPU Test
+ 
+pip install --no-cache-dir --force-reinstall tqdm ipywidgets jupyterlab_widgets optuna opencv-python
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+pip install torch==1.12.1+cu102 torchvision==0.13.1+cu102 torchaudio==0.12.1+cu102 --index-url https://download.pytorch.org/whl
+pip install --no-cache-dir --force-reinstall  tensorboard pycocotools papermill
+conda install -y -c defaults "numpy<2"
+jupyter notebook
+#*************************************
+#=====================================
+
+
+#=====================================
+#*************************************
+# GPU TESLA K80, Ubuntu 20.04.6 LTS Anaconda3-2025.12-1-Linux-x86_64.sh  
+#conda create --name mask_rcnn1 python=3.10 -y
+#conda activate mask_rcnn1
+# Passed GPU Test
+ 
+pip install --no-cache-dir --force-reinstall tqdm ipywidgets jupyterlab_widgets optuna opencv-python
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+pip install torch==1.12.0+cu102 torchvision==0.13.0+cu102 torchaudio==0.12.0+cu102 --index-url https://download.pytorch.org/whl
+pip install --no-cache-dir --force-reinstall  tensorboard pycocotools papermill
+conda install -y -c defaults "numpy<2"
+jupyter notebook
+#*************************************
+#=====================================
+
+
+#=====================================
+#*************************************
+# GPU TESLA K80, Ubuntu 20.04.6 LTS Anaconda3-2025.12-1-Linux-x86_64.sh  
+#conda create --name mask_rcnn python=3.10 -y
+#conda activate mask_rcnn
+# Passed GPU Test 
+
+pip install --no-cache-dir --force-reinstall tqdm ipywidgets jupyterlab_widgets optuna opencv-python
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+pip install torch==1.11.0+cu102 torchvision==0.12.0+cu102 torchaudio==0.11.0+cu102 --index-url https://download.pytorch.org/whl
+pip install --no-cache-dir --force-reinstall  tensorboard pycocotools papermill
+conda install -y -c defaults "numpy<2"
+jupyter notebook
+#*************************************
+#=====================================
+#_______________________________________________________________________________
+
+
+
+# Use multiple GPUs ===========================================================
 import torch
 import torch.nn as nn
 
@@ -443,7 +503,6 @@ gpu_device_ids = [0, 1]  # max 2 GPUs
     else:
         device = torch.device("cpu")
         model = model.to(device)
-
 
 
 # Function ***** --------***************************
@@ -1185,3 +1244,4 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
