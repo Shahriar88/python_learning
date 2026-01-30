@@ -411,6 +411,7 @@ print(inspect.signature(create_model))    # what params does it accept?
 
 
 # Tesla K80 Troubleshooting ==============================================
+# Solved:>> RuntimeError: CUDA error: an illegal memory access was encountered
 # You can use either one of the setting for torch and cuda
 
 #=====================================
@@ -1264,6 +1265,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
