@@ -1,0 +1,14 @@
+# GPU TESLA K80, Ubuntu 20.04.6 LTS Anaconda3-2025.12-1-Linux-x86_64.sh  
+#conda create --name mask_rcnn python=3.10 -y
+#conda activate mask_rcnn
+# Passed GPU Test 
+
+pip install --no-cache-dir --force-reinstall tqdm ipywidgets jupyterlab_widgets optuna opencv-python
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+
+pip install torch==1.11.0+cu102 torchvision==0.12.0+cu102 torchaudio==0.11.0+cu102 --index-url https://download.pytorch.org/whl
+pip install --no-cache-dir --force-reinstall  tensorboard pycocotools papermill
+conda install -y -c defaults "numpy<2"
+jupyter notebook
+
