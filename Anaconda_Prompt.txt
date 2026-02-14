@@ -2,7 +2,13 @@ https://pypi.org/project/torch/
 https://pytorch.org/get-started/previous-versions/     # torch cuda -> try pip code for your gpu cuda (nvidia-smi) version
 https://download.pytorch.org/whl  # lots of wheel are avaialable torch+cuda
 
+
+
+# llama =======
 https://abetlen.github.io/llama-cpp-python/whl
+# pip install "https://github.com/dougeeai/llama-cpp-python-wheels/releases/download/v0.3.16-cuda12.1-sm86-py312/llama_cpp_python-0.3.16+cuda12.1.sm86.ampere-cp312-cp312-win_amd64.whl"
+
+
 
 # Update Conda, setuptools ________________________________________________________________________________________
 conda update -n base -c defaults conda
@@ -1267,6 +1273,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
