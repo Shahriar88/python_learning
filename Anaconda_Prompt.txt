@@ -321,7 +321,6 @@ https://forums.developer.nvidia.com/t/looking-for-a-pre-built-wheel-for-pytorch-
 https://pypi.org/project/ur-rtde/
 pip install ur-rtde
 https://ieeexplore.ieee.org/document/10871000
-
 https://docs.universal-robots.com/tutorials/urscript-tutorials/socket-communication.html#python-client-code-example
 
 
@@ -1276,6 +1275,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
