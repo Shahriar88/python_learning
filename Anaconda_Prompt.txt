@@ -1190,8 +1190,15 @@ chmod g+x script.sh   # group only
 chmod o+x script.sh   # others only
 chmod a+x script.sh   # all (same as +x)
 
+# Download sh file ===============
+wget https://repo.anaconda.com/archive/Anaconda3-2025.12-2-Linux-x86_64.sh
 
+# Install sh file =====================
+## Install Anaconda (recommended way)
+bash Anaconda3-2025.12-2-Linux-x86_64.sh
 
+## Alternative method (only if execute permission is set)
+./Anaconda3-2025.12-2-Linux-x86_64.sh
 
 # Ownership ========
 chown user file.txt
@@ -1275,6 +1282,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
