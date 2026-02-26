@@ -1,6 +1,13 @@
 % !TeX program = pdflatex
+
+% sinfo passwd
+
+
 \documentclass[11pt]{article}
 \usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{qrcode}
+
 
 
 \usepackage[margin=1in]{geometry}
@@ -73,7 +80,8 @@
 \author{%
 Md Shahriar Forhad\\
 \texttt{shahriar.forhad.eee@gmail.com}\\
-\url{https://shahriar88.github.io/}%
+\url{https://shahriar88.github.io/}\\[0.6em]
+\qrcode[height=1.2in]{https://shahriar88.github.io}
 }
 \date{\today}
 
@@ -130,13 +138,77 @@ After you enter your password correctly, you should see a prompt indicating
 that you are now on the cluster login node, similar to:
 
 \begin{codeblock}
-[username@login001 ~]$
+[username\@login001 ~]$
 \end{codeblock}
 
 
 At this point you are logged into CRADLE and ready to work with SLURM, Python
 environments, and the other tools described in this tutorial.
+
+
+
+
+
+
+
+
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{p{4cm} p{9cm}}
+\hline
+\textbf{Command} & \textbf{Description} \\
+\hline
+
+\multicolumn{2}{l}{\textbf{Basic Linux Commands}} \\
+
+\texttt{pwd} & Print current working directory. \\
+\texttt{ls} & List files in current directory. \\
+\texttt{ls -l} & List files with detailed information. \\
+\texttt{cd <dir>} & Change directory. \\
+\texttt{mkdir <dir>} & Create a new directory. \\
+\texttt{cp <src> <dst>} & Copy file or directory. \\
+\texttt{mv <src> <dst>} & Move or rename file. \\
+\texttt{rm <file>} & Remove file. \\
+
+\multicolumn{2}{l}{\textbf{SLURM / HPC Commands}} \\
+
+\texttt{sinfo} & Show available partitions and node status. \\
+\texttt{squeue} & Show all running jobs. \\
+\texttt{squeue -u <user>} & Show jobs for specific user. \\
+\texttt{sbatch <script.sh>} & Submit batch job. \\
+\texttt{srun --pty bash} & Start interactive session. \\
+\texttt{scancel <jobid>} & Cancel a running job. \\
+
+\multicolumn{2}{l}{\textbf{GPU and Monitoring}} \\
+
+\texttt{nvidia-smi} & Display GPU usage (compute nodes only). \\
+\texttt{tail -f <file>} & Monitor job output in real time. \\
+
+\multicolumn{2}{l}{\textbf{Environment and Modules}} \\
+
+\texttt{module avail} & List available software modules. \\
+\texttt{module load <name>} & Load a software module. \\
+\texttt{module list} & Show currently loaded modules. \\
+
+\multicolumn{2}{l}{\textbf{Storage and Usage}} \\
+
+\texttt{du -sh *} & Show directory sizes. \\
+\texttt{df -h} & Show disk usage. \\
+\texttt{quota -s} & Show storage quota. \\
+
+\hline
+\end{tabular}
+\caption{Common Linux and SLURM commands for CRADLE HPC usage}
+\end{table}
+
+
+
 %______________________________________________________________________________________________
+
+
 
 \section{A Minimal SLURM Job Script Example}
 \label{sec:basic-script}
@@ -1232,6 +1304,41 @@ Recommended for HPC & No & Limited & No & Yes \\
 
 
 
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{4pt}
+
+\begin{tabularx}{\textwidth}{@{}lXXXX@{}}
+\toprule
+\textbf{Aspect} 
+& \textbf{CPU} 
+& \textbf{Single GPU} 
+& \textbf{DataParallel (DP)} 
+& \textbf{DistributedDataParallel (DDP)} \\
+\midrule
+
+Hardware & CPU cores only & 1 GPU & Multiple GPUs (1 node) & Multiple GPUs (1+ nodes) \\
+Processes & 1 & 1 & 1 & 1 per GPU \\
+GPU usage & None & Full single GPU & Automatic batch split & Explicit per-rank GPU \\
+Multi-node support & No & No & No & Yes \\
+Performance & Slowest & Fast & Medium & Fastest \\
+Scalability & Poor & Limited & Limited & Excellent \\
+Communication & None & None & Gather/scatter overhead & NCCL all-reduce \\
+Gradient sync & N/A & N/A & Implicit (less efficient) & Explicit (efficient) \\
+Memory efficiency & High & Medium & Lower (replication overhead) & Medium (replicated per GPU) \\
+Fault isolation & N/A & N/A & Poor & Better \\
+Code complexity & Very low & Low & Low & Medium \\
+Launch method & \texttt{python} & \texttt{python} & \texttt{python} & \texttt{torchrun}/\texttt{srun} \\
+Best use case & Debugging, tests & Small models & Prototyping & Large-scale training \\
+Recommended for HPC & No & Limited & No & Yes \\
+\bottomrule
+\end{tabularx}
+
+\caption{Comparison of CPU, single-GPU, DataParallel (DP), and DistributedDataParallel (DDP) execution modes in PyTorch.}
+\label{tab:cpu-gpu-dp-ddp}
+\end{table}
 
 
 % ======================================================================================================
@@ -1611,16 +1718,16 @@ These commands are typically run from a local terminal, not inside a SLURM job.
 
 \begin{codeblock}
 scp my_script.py \
-    yourUserName@login.cradle.university.edu:~/projects/
+    yourUserName@login.cradle.university.edu:/home/yourUserName/projects/
 \end{codeblock}
 
 This copies \texttt{my\_script.py} from your current local directory into
-\texttt{\~{}/projects/} on the cluster.
+\texttt{/home/yourUserName/projects/} on the cluster.
 
 \subsubsection{Copying a Single File from CRADLE to Local Machine}
 
 \begin{codeblock}
-scp yourUserName@login.cradle.university.edu:~/projects/results.txt \
+scp yourUserName@login.cradle.university.edu:/home/yourUserName/projects/results.txt \
     .
 \end{codeblock}
 
@@ -1632,15 +1739,15 @@ To recursively copy a directory (for example, a project folder):
 
 \begin{codeblock}
 scp -r myProjectFolder/ \
-    yourUserName@login.cradle.university.edu:~/projects/
+    yourUserName@login.cradle.university.edu:/home/yourUserName/projects/
 \end{codeblock}
 
-This creates \texttt{\~{}/projects/myProjectFolder/} on the cluster.
+This creates \texttt{/home/yourUserName/projects/myProjectFolder/} on the cluster.
 
 \subsubsection{Copying an Entire Directory from CRADLE to Local Machine}
 
 \begin{codeblock}
-scp -r yourUserName@login.cradle.university.edu:~/projects/myProjectFolder/ \
+scp -r yourUserName@login.cradle.university.edu:/home/yourUserName/projects/myProjectFolder/ \
     ~/Desktop/
 \end{codeblock}
 
@@ -1652,7 +1759,7 @@ After a SLURM job finishes, you often want to retrieve output files such as logs
 or trained models.
 
 \begin{codeblock}
-scp yourUserName@login.cradle.university.edu:~/slurm_outputs/myJob.out.123456 \
+scp yourUserName@login.cradle.university.edu:/home/yourUserName/slurm_outputs/myJob.out.123456 \
     .
 \end{codeblock}
 
@@ -1663,7 +1770,7 @@ Here, \texttt{123456} is the SLURM job ID.
 You can use wildcards to transfer multiple files at once:
 
 \begin{codeblock}
-scp yourUserName@login.cradle.university.edu:~/slurm_outputs/*.out.* \
+scp yourUserName@login.cradle.university.edu:/home/yourUserName/slurm_outputs/*.out.* \
     .
 \end{codeblock}
 
