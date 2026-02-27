@@ -1160,10 +1160,13 @@ rm -rf folder_name    # force delete (dangerous)
 # File Viewing and Editing ========
 # View file contents
 cat file.txt          # print entire file
-less file.txt         # scrollable view
+less file.txt         # scrollable view, press "q" to exit
 head file.txt         # first 10 lines
 tail file.txt         # last 10 lines
 tail -f logfile.log   # follow live logs
+
+nani file.txt         # Edit file
+vim file.txt         # Edit file
 
 
 # File info =============
@@ -1289,6 +1292,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
