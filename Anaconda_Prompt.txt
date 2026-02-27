@@ -303,6 +303,13 @@ sudo chmod +x filename.sh
 sudo apt install filename.sh
 
 
+# Use jupyter on SSH or HPC ================
+## On CRADLE or Remote PC
+jupyter notebook --no-browser --port=8888
+## On your local machine
+ssh -L 8888:localhost:8888 user@login.cradle.utrgv.edu
+## In your local browser
+http://localhost:8888/tree?token=YOUR_TOKEN
 
 
 
@@ -1282,6 +1289,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
