@@ -1166,7 +1166,7 @@ tail file.txt         # last 10 lines
 tail -f logfile.log   # follow live logs
 
 nano file.txt         # Edit file
-vim file.txt         # Edit file
+vim file.txt         # Edit file, Quit without saving :q!
 
 
 # File info =============
@@ -1292,6 +1292,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
