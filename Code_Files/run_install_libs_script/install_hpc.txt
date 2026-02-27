@@ -1,0 +1,38 @@
+
+# install_hpc.txt ->>>>>>>>>>>>>>
+
+#conda create --name mask_rcnn python=3.12 -y
+#conda activate mask_rcnn
+
+
+pip install --no-cache-dir --force-reinstall tqdm ipywidgets jupyterlab_widgets
+pip install --no-cache-dir --force-reinstall optuna
+pip install --no-cache-dir --force-reinstall opencv-python
+
+
+conda install -c conda-forge jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+
+#pip install --force-reinstall --no-cache-dir  torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0  --index-url https://download.pytorch.org/whl/cu124
+
+pip install --force-reinstall --no-cache-dir torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu121
+
+pip install --no-cache-dir --force-reinstall  tensorboard
+pip install --no-cache-dir  --force-reinstall pycocotools
+pip install papermill
+
+#jupyter notebook
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# Anaconda prompt command ->>>>>>>>>>>>>>
+# python run_installs.py install_steps.txt
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#==============================================================
+#==============================================================
+#==============================================================
+
+
+
+
+
