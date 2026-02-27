@@ -1165,7 +1165,7 @@ head file.txt         # first 10 lines
 tail file.txt         # last 10 lines
 tail -f logfile.log   # follow live logs
 
-nani file.txt         # Edit file
+nano file.txt         # Edit file
 vim file.txt         # Edit file
 
 
@@ -1292,6 +1292,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
