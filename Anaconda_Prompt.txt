@@ -315,7 +315,9 @@ http://localhost:8888/tree?token=YOUR_TOKEN
 
 
 
-
+# Run py from terminal
+python a.py && python b.py && python c.py  # if a.py fails - > b.py, c.py will not run
+python a.py ; python b.py ; python c.py  # if a.py fails -> b.py, c.py will run
 
 
 
@@ -1292,6 +1294,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
