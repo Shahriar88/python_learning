@@ -114,6 +114,8 @@ install important libraries:____________________________________________________
 pip install "gymnasium[classic-control]"
 conda install -c conda-forge swig box2d-py
 
+python -m pip install "setuptools<81"
+python -m pip install -U pygame
 
 pip install "gymnasium[box2d]"
 pip install gymnasium[mujoco]
@@ -1294,6 +1296,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
