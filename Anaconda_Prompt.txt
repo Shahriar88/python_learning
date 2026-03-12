@@ -964,6 +964,24 @@ Example Run training:
 #_______________________________________________________________________________
 
 
+# ===============================================================
+# Create and publish a PyPI library
+
+# Clean old builds (recommended)
+rm -rf dist build *.egg-info
+
+# Local editable install
+pip install -e .
+
+# Build distribution
+python -m build
+
+# Verify package metadata
+python -m twine check dist/*
+
+# Upload to PyPI
+twine upload dist/* -u __token__ -p pypi-YOUR_TOKEN_HERE
+# ===============================================================
 
 
 #================================================================================================
@@ -1296,6 +1314,7 @@ history
 #===============================================================
 #===============================================================
 #===============================================================
+
 
 
 
