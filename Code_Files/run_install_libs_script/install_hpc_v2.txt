@@ -1,0 +1,47 @@
+
+# install_hpc_v2.txt ->>>>>>>>>>>>>>
+# CUDA 12.1
+
+#conda create --name mask_rcnn python=3.12 -y
+#conda activate mask_rcnn
+
+#https://pytorch.org/get-started/previous-versions/
+#https://download.pytorch.org/whl
+
+
+# Add conda channels
+conda config --add channels defaults
+conda config --add channels conda-forge
+conda install menuinst -y
+#conda install -c conda-forge menuinst>=2.1.2
+#conda update menuinst
+conda clean --all -y
+
+conda install tqdm ipywidgets jupyterlab_widgets optuna -y
+conda install jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+conda install tensorboard pycocotools papermill -y
+
+
+
+# CUDA 12.1
+
+pip install --force-reinstall --no-cache-dir torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cu121
+
+pip install --no-cache-dir --force-reinstall opencv-python==4.13.0.92
+
+#jupyter notebook
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# Anaconda prompt command ->>>>>>>>>>>>>>
+# python run_installs.py install_hpc_v2.txt
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#==============================================================
+#==============================================================
+#==============================================================
+
+
+
+
+
