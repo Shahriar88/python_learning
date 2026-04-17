@@ -188,6 +188,10 @@ def plot_matching_images(
     ncols=3,
     fig_scale_x=5,
     fig_scale_y=5.5,
+    row_gap=0.15,
+    save_image=False,
+    save_folder="combined_plots",
+    dpi=300,
 ):
     """
     Plot matching images from folders as subplots.
@@ -211,6 +215,18 @@ def plot_matching_images(
 
     fig_scale_y : float
         Height multiplier per row.
+
+    row_gap : float
+        Vertical spacing between rows.
+
+    save_image : bool
+        If True, save the combined subplot image.
+
+    save_folder : str
+        Folder to save combined figure.
+
+    dpi : int
+        Save resolution.
     """
 
     # -----------------------------------------
@@ -230,8 +246,6 @@ def plot_matching_images(
 
     # -----------------------------------------
     # Collect matching images
-    # Store as:
-    # (folder_name, image_path)
     # -----------------------------------------
     matches = []
 
@@ -257,7 +271,7 @@ def plot_matching_images(
     nrows = math.ceil(n / ncols)
 
     # -----------------------------------------
-    # Create subplot figure
+    # Create figure
     # -----------------------------------------
     fig, axes = plt.subplots(
         nrows,
@@ -274,7 +288,7 @@ def plot_matching_images(
         axes = axes.flatten()
 
     # -----------------------------------------
-    # Plot each image
+    # Plot images
     # -----------------------------------------
     for ax, (folder_name, img_path) in zip(axes, matches):
 
@@ -303,18 +317,24 @@ def plot_matching_images(
 
         ax.axis("off")
 
-    # -----------------------------------------
-    # Hide unused axes
-    # -----------------------------------------
+    # Hide unused cells
     for ax in axes[len(matches):]:
         ax.axis("off")
 
     plt.tight_layout()
-    plt.show()
-    
-    
-    
-    
+    fig.subplots_adjust(hspace=row_gap)
 
-    # Show figure
+    # -----------------------------------------
+    # Save figure
+    # -----------------------------------------
+    if save_image:
+        save_dir = Path(save_folder)
+        save_dir.mkdir(parents=True, exist_ok=True)
+
+        save_name = f"{image_start_with}_combined.png"
+        save_path = save_dir / save_name
+
+        plt.savefig(save_path, dpi=dpi, bbox_inches="tight")
+        print(f"Saved: {save_path}")
+
     plt.show()
