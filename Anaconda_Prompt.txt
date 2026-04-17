@@ -441,6 +441,15 @@ python papermill_v0.py & python papermill_v1.py & python papermill_v2.py & pytho
 #_______________________________________________________________________________
 
 
+#  ****************************************************************
+# RuntimeError: use_libuv was requested but PyTorch was build without libuv support
+## https://docs.libuv.org/en/v1.x/
+conda install -c conda-forge libuv -y
+#_______________________________________________________________________________
+
+
+
+
 
 # Tesla K80 Troubleshooting ==============================================
 # Solved:>> RuntimeError: CUDA error: an illegal memory access was encountered
