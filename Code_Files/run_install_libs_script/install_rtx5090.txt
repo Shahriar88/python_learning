@@ -19,8 +19,9 @@ conda install menuinst -y
 
 
 conda install tqdm ipywidgets jupyterlab_widgets optuna -y
-conda install jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
+conda install jupyterlab jupyter notebook pandas matplotlib pillow -y
 conda install tensorboard pycocotools papermill -y
+conda install spyder -y
 # pydensecrf for CRF
 conda install -c conda-forge pydensecrf -y
 
