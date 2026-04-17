@@ -37,7 +37,7 @@ pip install --no-cache-dir --force-reinstall opencv-python==4.13.0.92
 
 
 # Anaconda prompt command ->>>>>>>>>>>>>>
-# python run_installs.py install_5090.txt
+# python run_installs.py install_rtx5090.txt
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #==============================================================
 #==============================================================
