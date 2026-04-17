@@ -1330,6 +1330,9 @@ history
 
 #=============== Ping Monitor ========================================
 #==============================================================
+#==============================================================
+REM Ping server every minute
+
 @echo off
 title Ping Monitor ***.***.***.***
 
@@ -1351,6 +1354,47 @@ if %errorlevel%==0 (
 echo Failed. Retrying in 60 seconds...
 timeout /t 60 /nobreak >nul
 goto loop
+
+#==============================================================
+REM Ping server every minute
+REM Print 1-60 sec
+@echo off
+title Ping Monitor 129.113.130.168
+
+:loop
+cls
+echo [%date% %time%]
+echo Pinging 129.113.130.168 ...
+echo.
+
+ping -n 1 129.113.130.168 >nul
+
+if %errorlevel%==0 (
+    echo ==========================================
+    echo SUCCESS: 129.113.130.168 is reachable
+    echo Time: %date% %time%
+    echo ==========================================
+    echo.
+    pause
+    cmd /k
+)
+
+echo Failed.
+echo Waiting 60 seconds before retry...
+echo.
+
+for /L %%i in (1,1,60) do (
+    cls
+    echo [%date% %time%]
+    echo Pinging 129.113.130.168 ...
+    echo.
+    echo Failed.
+    echo Waiting... %%i sec
+    timeout /t 1 /nobreak >nul
+)
+
+goto loop
+#==============================================================
 #==============================================================
 #==============================================================
 
