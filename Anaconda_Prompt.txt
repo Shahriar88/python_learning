@@ -1355,7 +1355,11 @@ echo Failed. Retrying in 60 seconds...
 timeout /t 60 /nobreak >nul
 goto loop
 
+
 #==============================================================
+#==============================================================
+
+
 REM Ping server every minute
 REM Print 1-60 sec
 @echo off
