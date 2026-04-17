@@ -12,10 +12,11 @@
 # Add conda channels
 conda config --add channels defaults
 conda config --add channels conda-forge
+conda clean --all -y
 conda install menuinst -y
 #conda install -c conda-forge menuinst>=2.1.2
 #conda update menuinst
-conda clean --all -y
+
 
 conda install tqdm ipywidgets jupyterlab_widgets optuna -y
 conda install jupyterlab jupyter notebook spyder pandas matplotlib pillow -y
