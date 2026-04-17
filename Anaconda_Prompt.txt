@@ -430,6 +430,16 @@ import inspect
 print(inspect.signature(create_model))    # what params does it accept?
 #_______________________________________________________________________________
 
+# Run multiple py files sequentially with one command ****************************************************************
+
+## It runs the next script only if the previous one succeeds.
+python papermill_v0.py && python papermill_v1.py && python papermill_v2.py && python papermill_v3.py
+
+## If you want all scripts to run even if one fails
+python papermill_v0.py & python papermill_v1.py & python papermill_v2.py & python papermill_v3.py
+
+#_______________________________________________________________________________
+
 
 
 # Tesla K80 Troubleshooting ==============================================
