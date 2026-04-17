@@ -162,6 +162,159 @@ else:
 
     # Improve spacing
     plt.tight_layout()
+    
+    
+    
+    
+    
+# =====================================================
+# Function
+# Plot selected images as subplots
+# Main Title   = image file name
+# Subtitle     = folder name
+# =====================================================
+    
+    
+from pathlib import Path
+import math
+import matplotlib.pyplot as plt
+from PIL import Image
+
+
+def plot_matching_images(
+    parent_folder="executed_notebooks",
+    folder_start_with="E",
+    image_start_with="gt_vs_pred_raw_idx3",
+    ncols=3,
+    fig_scale_x=5,
+    fig_scale_y=5.5,
+):
+    """
+    Plot matching images from folders as subplots.
+
+    Parameters
+    ----------
+    parent_folder : str
+        Parent directory containing experiment folders.
+
+    folder_start_with : str
+        Only use folders whose names start with this text.
+
+    image_start_with : str
+        Only use image files whose names start with this text.
+
+    ncols : int
+        Number of subplot columns.
+
+    fig_scale_x : float
+        Width multiplier per column.
+
+    fig_scale_y : float
+        Height multiplier per row.
+    """
+
+    # -----------------------------------------
+    # Parent path
+    # -----------------------------------------
+    parent = Path(parent_folder)
+
+    # -----------------------------------------
+    # Get matching folders
+    # -----------------------------------------
+    folders = sorted(
+        [
+            p for p in parent.iterdir()
+            if p.is_dir() and p.name.startswith(folder_start_with)
+        ]
+    )
+
+    # -----------------------------------------
+    # Collect matching images
+    # Store as:
+    # (folder_name, image_path)
+    # -----------------------------------------
+    matches = []
+
+    for folder in folders:
+        imgs = sorted(folder.glob(f"{image_start_with}*.png"))
+
+        for img in imgs:
+            matches.append((folder.name, img))
+
+    print(f"Total matched images: {len(matches)}")
+
+    # -----------------------------------------
+    # No matches
+    # -----------------------------------------
+    if len(matches) == 0:
+        print("No matching images found.")
+        return
+
+    # -----------------------------------------
+    # Grid size
+    # -----------------------------------------
+    n = len(matches)
+    nrows = math.ceil(n / ncols)
+
+    # -----------------------------------------
+    # Create subplot figure
+    # -----------------------------------------
+    fig, axes = plt.subplots(
+        nrows,
+        ncols,
+        figsize=(fig_scale_x * ncols, fig_scale_y * nrows)
+    )
+
+    # Make iterable
+    if nrows == 1 and ncols == 1:
+        axes = [axes]
+    elif nrows == 1 or ncols == 1:
+        axes = list(axes)
+    else:
+        axes = axes.flatten()
+
+    # -----------------------------------------
+    # Plot each image
+    # -----------------------------------------
+    for ax, (folder_name, img_path) in zip(axes, matches):
+
+        img = Image.open(img_path)
+
+        ax.imshow(img)
+
+        # Main title = file name
+        ax.set_title(
+            img_path.name,
+            fontsize=10,
+            pad=18,
+            fontweight="bold"
+        )
+
+        # Subtitle = folder name
+        ax.text(
+            0.5,
+            1.01,
+            folder_name,
+            transform=ax.transAxes,
+            ha="center",
+            va="bottom",
+            fontsize=9
+        )
+
+        ax.axis("off")
+
+    # -----------------------------------------
+    # Hide unused axes
+    # -----------------------------------------
+    for ax in axes[len(matches):]:
+        ax.axis("off")
+
+    plt.tight_layout()
+    plt.show()
+    
+    
+    
+    
 
     # Show figure
     plt.show()
