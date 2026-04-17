@@ -180,9 +180,10 @@ pip install -r requirements_notorch.txt
 
 
 
-
-
-
+# Save conda and pip packages list ==================================
+conda list > conda_packages.txt
+pip list > pip_packages.txt
+#____________________________________________________________
 
 python code resources: ____________________________________________________________________________________________
 
