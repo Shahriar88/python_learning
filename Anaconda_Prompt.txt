@@ -1445,11 +1445,14 @@ pause
 
 
 
-:: ================== Batch File name.bat ==========================================
-:: Read NVIDIA GPU VRAM usage
-:: GPU utilization %, dedicated VRAM used, dedicated VRAM free, total dedicated VRAM
+
+:: ================== gpu_status.bat ==========================================
+:: Read NVIDIA GPU usage and VRAM
+:: Output: GPU utilization %, VRAM used, VRAM free, total VRAM
+@echo off
 nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.free,memory.total --format=csv,noheader,nounits
-:: ==============================================================
+pause
+#==============================================================
 
 
 
