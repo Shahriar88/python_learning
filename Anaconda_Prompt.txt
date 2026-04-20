@@ -1457,6 +1457,56 @@ pause
 
 
 
+#==============================================================
+:: ================== run_python_at_gpu_status.bat ==========================================
+:: ==============================================================
+:: Run Python when GPU utilization stays below 1% for 5 minutes
+:: Checks every 20 seconds
+:: 5 minutes = 300 seconds = 15 consecutive checks
+:: ==============================================================
+
+@echo off
+setlocal EnableDelayedExpansion
+
+set SCRIPT=papermill_v0_swun.py
+set CHECK_INTERVAL=20
+set REQUIRED_IDLE_COUNT=15
+set IDLE_COUNT=0
+
+:check_loop
+for /f "delims=" %%G in ('nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits') do (
+    set GPU_UTIL=%%G
+    goto got_util
+)
+
+:got_util
+set GPU_UTIL=!GPU_UTIL: =!
+echo GPU utilization: !GPU_UTIL!%%
+
+if !GPU_UTIL! LSS 1 (
+    set /a IDLE_COUNT+=1
+    echo Idle check !IDLE_COUNT! of %REQUIRED_IDLE_COUNT%
+) else (
+    set IDLE_COUNT=0
+    echo GPU is busy. Resetting idle counter.
+)
+
+if !IDLE_COUNT! GEQ %REQUIRED_IDLE_COUNT% goto run_job
+
+timeout /t %CHECK_INTERVAL% /nobreak >nul
+goto check_loop
+
+:run_job
+echo.
+echo GPU utilization stayed below 1%% for 5 minutes.
+echo Starting Python script...
+
+set CUDA_LAUNCH_BLOCKING=1
+python %SCRIPT%
+
+pause
+#==============================================================
+#==============================================================
 
 
 
