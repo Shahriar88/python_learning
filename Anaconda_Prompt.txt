@@ -1417,6 +1417,33 @@ goto loop
 
 
 
+#=============== Start python at a specific time ========================================
+#==============================================================
+#==============================================================
+
+
+@echo off
+
+:wait_loop
+for /f "tokens=1-2 delims=:" %%a in ("%time%") do (
+    set HH=%%a
+    set MM=%%b
+)
+
+if "%HH: =0%:%MM%"=="03:00" goto run_job
+
+timeout /t 20 /nobreak >nul
+goto wait_loop
+
+:run_job
+set CUDA_LAUNCH_BLOCKING=1
+python papermill_v0_swun.py
+pause
+
+#==============================================================
+#==============================================================
+
+
 
 
 
