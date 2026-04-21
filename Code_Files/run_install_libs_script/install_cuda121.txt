@@ -4,6 +4,7 @@
 
 #conda create --name mask_rcnn python=3.12 -y
 #conda activate mask_rcnn
+# python run_installs.py install_cuda121.txt
 
 #https://pytorch.org/get-started/previous-versions/
 #https://download.pytorch.org/whl
@@ -38,7 +39,7 @@ pip install --no-cache-dir --force-reinstall opencv-python==4.13.0.92
 
 
 # Anaconda prompt command ->>>>>>>>>>>>>>
-# python run_installs.py install_cuda121.txt
+
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #==============================================================
 #==============================================================
