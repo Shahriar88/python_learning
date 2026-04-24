@@ -1508,6 +1508,12 @@ pause
 #==============================================================
 #==============================================================
 
-
-
+#==============================================================
+# Calculate Model Size , Get Model Size
+def model_size_mb(model):
+    param_size = sum(p.numel() * p.element_size() for p in model.parameters())
+    buffer_size = sum(b.numel() * b.element_size() for b in model.buffers())
+    size_mb = (param_size + buffer_size) / 1024**2
+    print(f"model size: {size_mb:.2f} MB")
+#==============================================================
 
