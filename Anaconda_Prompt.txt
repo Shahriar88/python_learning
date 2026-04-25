@@ -1750,3 +1750,18 @@ if torch.cuda.is_available():
 #==============================================================
 
 
+
+#==============================================================
+#==============================================================
+# Find files using glob
+## Find all JPG files anywhere inside data_folder
+## Find all PNG files anywhere inside data_folder
+## Find all JSON files anywhere inside data_folder
+
+from glob import glob
+jpg_files = glob(data_folder + "/**/*.jpg", recursive=True)
+png_files = glob(data_folder + "/**/*.png", recursive=True)
+json_files = glob(data_folder + "/**/*.json", recursive=True)
+#==============================================================
+#==============================================================
+
