@@ -1692,3 +1692,47 @@ def inspect_json(json_path, max_chars=2000):
 
     return data
 #==============================================================
+
+
+
+#==============================================================
+# Find file from a list
+from pathlib import Path
+
+def find_files(file_list, target_name, case_sensitive=False):
+    """
+    Find files by filename from a list of file paths.
+
+    Parameters
+    ----------
+    file_list : list
+        List of file paths as strings or Path objects.
+    target_name : str
+        Filename to search for, e.g. "definitions.json".
+    case_sensitive : bool
+        If False, matching ignores uppercase/lowercase.
+
+    Returns
+    -------
+    list
+        Matching file paths as Path objects.
+    """
+
+    if case_sensitive:
+        matches = [
+            Path(f) for f in file_list
+            if Path(f).name == target_name
+        ]
+    else:
+        target_name = target_name.lower()
+        matches = [
+            Path(f) for f in file_list
+            if Path(f).name.lower() == target_name
+        ]
+
+    print(f"Found {len(matches)} file(s):")
+    for f in matches:
+        print(f)
+
+    return matches
+#==============================================================
