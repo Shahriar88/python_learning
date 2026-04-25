@@ -41,7 +41,6 @@ python -c "import torchvision; print('torchvision OK')"
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
 # Anaconda prompt command ->>>>>>>>>>>>>>
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
