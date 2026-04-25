@@ -1645,3 +1645,50 @@ def show_image(img_path, figsize=(14, 6), axis_off=True):
 
     plt.show()
 #==============================================================
+
+#==============================================================
+# Read Json file
+import json
+from pathlib import Path
+
+def inspect_json(json_path, max_chars=2000):
+    """
+    Load and preview a JSON file.
+
+    Parameters
+    ----------
+    json_path : str or Path
+        Path to the JSON file.
+    max_chars : int
+        Maximum number of characters to print from the formatted JSON.
+
+    Returns
+    -------
+    object
+        Loaded JSON data. Usually dict or list.
+    """
+
+    json_path = Path(json_path)
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    print("=" * 60)
+    print("JSON file:", json_path)
+    print("Type:", type(data))
+
+    if isinstance(data, dict):
+        print("Keys:", list(data.keys()))
+
+    elif isinstance(data, list):
+        print("List length:", len(data))
+        if len(data) > 0:
+            print("First item type:", type(data[0]))
+            if isinstance(data[0], dict):
+                print("First item keys:", list(data[0].keys()))
+
+    print("\nJSON preview:")
+    print(json.dumps(data, indent=2)[:max_chars])
+
+    return data
+#==============================================================
