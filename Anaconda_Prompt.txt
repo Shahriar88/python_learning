@@ -1520,6 +1520,7 @@ def model_size_mb(model):
 #==============================================================
 # Print Folder Tree
 
+import os
 def print_folder_tree(data_folder, max_files=5):
     data_folder = os.path.abspath(data_folder)
 
@@ -1547,3 +1548,55 @@ def print_folder_tree(data_folder, max_files=5):
 #==============================================================
 #==============================================================
 
+
+
+
+#==============================================================
+# Count dataset files and their types
+
+from pathlib import Path
+def count_dataset_files(data_folder, max_preview=5):
+    """
+    Count JPG, PNG, and JSON files recursively inside a dataset folder.
+
+    Parameters
+    ----------
+    data_folder : str or Path
+        Main dataset folder.
+    max_preview : int
+        Number of JPG image paths to print.
+
+    Returns
+    -------
+    dict
+        Dictionary containing file lists and counts.
+    """
+
+    data_folder = Path(data_folder)
+
+    jpg_files = sorted(list(data_folder.rglob("*.jpg")))
+    png_files = sorted(list(data_folder.rglob("*.png")))
+    json_files = sorted(list(data_folder.rglob("*.json")))
+
+    print("=" * 60)
+    print("Dataset file summary")
+    print("=" * 60)
+    print(f"Dataset folder: {data_folder}")
+    print(f"JPG images:     {len(jpg_files)}")
+    print(f"PNG images:     {len(png_files)}")
+    print(f"JSON files:     {len(json_files)}")
+
+    print(f"\nFirst {max_preview} JPG image files:")
+    for f in jpg_files[:max_preview]:
+        print(f)
+
+    return {
+        "jpg_files": jpg_files,
+        "png_files": png_files,
+        "json_files": json_files,
+        "jpg_count": len(jpg_files),
+        "png_count": len(png_files),
+        "json_count": len(json_files),
+    }
+#==============================================================
+#==============================================================
