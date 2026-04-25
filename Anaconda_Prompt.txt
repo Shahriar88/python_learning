@@ -1517,3 +1517,33 @@ def model_size_mb(model):
     print(f"model size: {size_mb:.2f} MB")
 #==============================================================
 
+#==============================================================
+# Print Folder Tree
+
+def print_folder_tree(data_folder, max_files=5):
+    data_folder = os.path.abspath(data_folder)
+
+    for root, dirs, files in os.walk(data_folder):
+        dirs.sort()
+        files.sort()
+
+        level = root.replace(data_folder, "").count(os.sep)
+        folder_name = os.path.basename(root)
+
+        if level == 0:
+            print(f"{folder_name}/")
+        else:
+            indent = "    " * (level - 1)
+            print(f"{indent}└── {folder_name}/")
+
+        file_indent = "    " * level
+
+        for f in files[:max_files]:
+            print(f"{file_indent}├── {f}")
+
+        if len(files) > max_files:
+            remaining = len(files) - max_files
+            print(f"{file_indent}└── ... {remaining} more files")
+#==============================================================
+#==============================================================
+
