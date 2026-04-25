@@ -9,7 +9,11 @@ Created on Sun Nov  2 21:46:22 2025
 
 If you want to input arguments then add first code cell like this:
 *** Add Cell Tags: parameters by jupyterlab
+or
+*** Add Cell Tags: parameters by jupyter notebook -> Edit -> Edit Notebook Metadata
+
 *** Try to avoid tuple (), use list [] for parameters if possible
+*** If you are using tuple (), use list [], you need to convert them properly from str to list, tuple
 
 # Parameters
 run_name = "default_run"
