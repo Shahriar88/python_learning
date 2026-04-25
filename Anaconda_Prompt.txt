@@ -1508,6 +1508,12 @@ pause
 #==============================================================
 #==============================================================
 
+
+
+#==============================================================
+# Important python functions =======================
+#==============================================================
+
 #==============================================================
 # Calculate Model Size , Get Model Size
 def model_size_mb(model):
@@ -1599,4 +1605,43 @@ def count_dataset_files(data_folder, max_preview=5):
         "json_count": len(json_files),
     }
 #==============================================================
+#==============================================================
+
+
+#==============================================================
+# Show Image Plot Image
+from PIL import Image
+import matplotlib.pyplot as plt
+
+def show_image(img_path, figsize=(14, 6), axis_off=True):
+    """
+    Open and display an image.
+
+    Parameters
+    ----------
+    img_path : str or Path
+        Path to the image file.
+    figsize : tuple
+        Matplotlib figure size.
+    axis_off : bool
+        If True, hide axis labels and ticks.
+
+    Returns
+    -------
+    PIL.Image.Image
+        Loaded image object.
+    """
+
+    img = Image.open(img_path)
+
+    print("Image path:", img_path)
+    print("Image size:", img.size)  # (width, height)
+
+    plt.figure(figsize=figsize)
+    plt.imshow(img)
+
+    if axis_off:
+        plt.axis("off")
+
+    plt.show()
 #==============================================================
