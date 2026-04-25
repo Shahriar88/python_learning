@@ -14,9 +14,9 @@
 conda config --add channels defaults
 conda config --add channels conda-forge
 conda clean --all -y
-#conda install menuinst -y
-conda install -c conda-forge menuinst>=2.3.0 -y
-conda update menuinst
+conda install menuinst -y
+#conda install -c conda-forge menuinst>=2.3.0 -y
+#conda update menuinst
 
 
 conda install tqdm ipywidgets jupyterlab_widgets optuna -y
@@ -48,8 +48,5 @@ python -c "import torchvision; print('torchvision OK')"
 #==============================================================
 #==============================================================
 #==============================================================
-
-
-
 
 
