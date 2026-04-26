@@ -1765,3 +1765,75 @@ json_files = glob(data_folder + "/**/*.json", recursive=True)
 #==============================================================
 #==============================================================
 
+
+
+#==============================================================
+#==============================================================
+# Visualize Model
+
+import torch
+import visualtorch
+import matplotlib.pyplot as plt
+
+
+def show_visualtorch_classifier(
+    model,
+    input_shape=(1, 2048, 28, 28),
+    figsize=(14, 10),
+    save_path=None,
+    move_model_back=True
+):
+    """
+    Visualize the classifier head of a DeepLabV3-style PyTorch model using visualtorch.
+
+    Parameters
+    ----------
+    model : torch.nn.Module
+        PyTorch model with a classifier attribute, e.g., model.classifier.
+    input_shape : tuple
+        Input shape expected by the classifier: (batch, channels, height, width).
+    figsize : tuple
+        Matplotlib figure size.
+    save_path : str or None
+        If provided, saves the figure to this path.
+    move_model_back : bool
+        If True, moves the full model back to CUDA if CUDA is available.
+
+    Returns
+    -------
+    img
+        PIL image returned by visualtorch.layered_view.
+    """
+
+    classifier = model.classifier.to("cpu")
+    classifier.eval()
+
+    img = visualtorch.layered_view(
+        classifier,
+        input_shape=input_shape,
+        legend=True
+    )
+
+    plt.figure(figsize=figsize)
+    plt.imshow(img)
+    plt.axis("off")
+    plt.tight_layout()
+
+    if save_path is not None:
+        plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+    plt.show()
+
+    if move_model_back:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model.to(device)
+
+    return img
+
+img = show_visualtorch_classifier(
+    model,
+    input_shape=(1, 2048, 28, 28),
+    save_path="deeplabv3_classifier_visualtorch.png"
+)
+#==============================================================
+#==============================================================
