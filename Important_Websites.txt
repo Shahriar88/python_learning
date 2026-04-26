@@ -8,3 +8,7 @@ Latex Report Writing =================
 
 https://www.overleaf.com/
 https://cocalc.com/
+
+
+Annotated Data =============
+https://www.kaggle.com/code/stpeteishii/robot-navigation-predict-and-visualize-importance
