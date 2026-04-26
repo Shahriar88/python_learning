@@ -7,6 +7,10 @@ https://elicit.com/
 Latex Report Writing =================
 
 https://www.overleaf.com/
+
+https://discourse.julialang.org/t/plot-neural-network-layout/22007/4
+https://www.overleaf.com/read/mcbykzjwdcgh
+
 https://cocalc.com/
 
 
