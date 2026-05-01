@@ -288,6 +288,21 @@ jupyter server --ServerApp.allow_origin='https://colab.research.google.com' --po
 
 #_______________________________________________________
 
+# ===================================
+# ======= Numpy on CUDA GPU =========
+# CUDA 11.2 to 11.8
+pip install cupy-cuda11x
+
+# CUDA 12.x
+pip install cupy-cuda12x
+
+# CUDA 13.x
+pip install cupy-cuda13x
+
+#_______________________________________________________
+
+
+
 
 #_______________________________________________________________________________
 
