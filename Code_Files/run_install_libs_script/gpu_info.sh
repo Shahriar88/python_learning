@@ -2,6 +2,8 @@
 #SBATCH --job-name=gpuinfo
 #SBATCH --output=logs/gpuinfo.out.%j
 #SBATCH --error=logs/gpuinfo.err.%j
+#SBATCH --mail-user=username@gmail.com
+#SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH -N 1
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=1
