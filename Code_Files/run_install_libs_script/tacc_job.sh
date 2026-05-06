@@ -39,6 +39,9 @@
 # Example 5: Submit to the gpu-a100 partition and request a specific A100 node.
 # export JOB=swfpn1; mkdir -p logs; sbatch -p gpu-a100 -w c316-009 --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
 
+# Check job status
+# sacct -j job_id --format=JobID,JobName,Partition,State,ExitCode,Elapsed,Start,End
+
 
 PY_SCRIPT="$1"
 
