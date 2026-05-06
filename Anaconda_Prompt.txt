@@ -466,7 +466,13 @@ conda install -c conda-forge libuv -y
 #_______________________________________________________________________________
 
 
-
+#  ****************************************************************
+# CUDA operations run synchronously
+# Windows CMD
+SET CUDA_LAUNCH_BLOCKING=1
+# Linux / macOS
+export CUDA_LAUNCH_BLOCKING=1
+#_______________________________________________________________________________
 
 
 # Tesla K80 Troubleshooting ==============================================
