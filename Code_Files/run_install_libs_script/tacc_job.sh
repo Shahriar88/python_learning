@@ -40,6 +40,7 @@
 # export JOB=swfpn1; mkdir -p logs; sbatch -p gpu-a100 -w c316-009 --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
 
 # Example 6: Submit to the gpu-a100 partition, request a specific A100 node, and request 128 GB RAM.
+# #SBATCH --mem=128G OR
 # export JOB=swfpn1; mkdir -p logs; sbatch -p gpu-a100 -w c316-009 --mem=128G --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
 
 # Check job status
