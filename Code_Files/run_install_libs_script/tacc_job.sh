@@ -4,7 +4,7 @@
 #SBATCH -p gpu-h100
 #SBATCH --mail-user=username@gmail.com
 #SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=6
 #SBATCH --time=2-00:00:00
 
 
