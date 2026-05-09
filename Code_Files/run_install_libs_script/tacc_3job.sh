@@ -25,8 +25,7 @@
 #   3 tasks x 6 CPUs/task = 18 CPU cores
 #
 # Usage:
-#   mkdir -p logs
-#   sbatch tacc_3jobs.sh train_model_A.py train_model_B.py train_model_C.py
+#   mkdir -p logs; sbatch tacc_3jobs.sh train_model_A.py train_model_B.py train_model_C.py
 #
 # Example:
 #   sbatch -p gpu-h100 -w c318-001 tacc_3jobs.sh AMR_U1_City.py AMR_U2_City.py AMR_F2_City.py
