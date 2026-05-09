@@ -2,13 +2,12 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -p gpu-h100
-#SBATCH --gres=gpu:1
 #SBATCH --mail-user=username@gmail.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --cpus-per-task=6
 #SBATCH --time=2-00:00:00
 
-
+# #SBATCH --gres=gpu:1
 # ============================================================
 # Copy files or folders from local computer to TACC
 # ============================================================
