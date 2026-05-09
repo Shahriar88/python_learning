@@ -26,6 +26,9 @@
 #
 # Usage:
 #   mkdir -p logs; sbatch tacc_3jobs.sh train_model_A.py train_model_B.py train_model_C.py
+
+# export JOB=three_experiments; mkdir -p logs; sbatch -p gpu-h100 -w c318-001 --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_3jobs.sh train_model_A.py train_model_B.py train_model_C.py
+
 #
 # Example:
 #   sbatch -p gpu-h100 -w c318-001 tacc_3jobs.sh AMR_U1_City.py AMR_U2_City.py AMR_F2_City.py
