@@ -32,6 +32,11 @@ pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchau
 
 pip install --no-cache-dir --force-reinstall opencv-python==4.13.0.92
 
+
+# Helpful libs
+conda install tabulate -y
+conda install openpyxl -y
+
 # Numba (CPU only)
 #conda install -c conda-forge numba
 
