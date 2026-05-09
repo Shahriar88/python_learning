@@ -2,6 +2,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -p gpu-h100
+#SBATCH --gres=gpu:1
 #SBATCH --mail-user=username@gmail.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --cpus-per-task=6
