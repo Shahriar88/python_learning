@@ -33,6 +33,10 @@ pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --
 
 pip install --no-cache-dir --force-reinstall opencv-python==4.13.0.92
 
+# Helpful libs
+conda install tabulate -y
+conda install openpyxl -y
+
 #jupyter notebook
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
