@@ -2,7 +2,6 @@
 #SBATCH -N 1
 #SBATCH -n 3
 #SBATCH -p gpu-h100
-#SBATCH --gres=gpu:3
 #SBATCH --mail-user=username@gmail.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --cpus-per-task=6
@@ -11,7 +10,7 @@
 #SBATCH --output=logs/%x.out.%j
 #SBATCH --error=logs/%x.err.%j
 
-
+# #SBATCH --gres=gpu:3
 # ============================================================
 # Three independent GPU experiments in one Slurm job
 # ============================================================
