@@ -25,3 +25,38 @@ https://www.cityscapes-dataset.com/downloads/
 
 
 https://www.mycpu.org/nn-visualize/
+
+
+
+
+AI ML Conference and Journal Links =============
+
+NeurIPS - Conference on Neural Information Processing Systems
+https://neurips.cc/
+
+ICLR - International Conference on Learning Representations
+https://iclr.cc/
+
+ICML - International Conference on Machine Learning
+https://icml.cc/
+
+AAAI - AAAI Conference on Artificial Intelligence
+https://aaai.org/conference/aaai/
+
+IJCAI - International Joint Conference on Artificial Intelligence
+https://www.ijcai.org/
+
+AAMAS - International Conference on Autonomous Agents and Multiagent Systems
+https://www.ifaamas.org/
+
+ICRA - IEEE International Conference on Robotics and Automation
+https://www.ieee-ras.org/conferences-workshops/fully-sponsored/icra/
+
+IROS - IEEE/RSJ International Conference on Intelligent Robots and Systems
+https://www.ieee-ras.org/conferences-workshops/financially-co-sponsored/iros/
+
+RSS - Robotics: Science and Systems
+https://roboticsconference.org/
+
+CoRL - Conference on Robot Learning
+https://www.corl.org/
