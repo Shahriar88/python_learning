@@ -1,3 +1,6 @@
+# ML Book
+https://www.bishopbook.com
+
 # HPC Info
 https://docs.tacc.utexas.edu/hpc/lonestar6/
 
