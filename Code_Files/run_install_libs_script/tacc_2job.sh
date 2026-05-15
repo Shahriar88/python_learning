@@ -83,7 +83,8 @@ echo
 # ============================================================
 
 echo "===== CONDA ====="
-source "$WORK/shahriar/anaconda3/etc/profile.d/conda.sh"
+# source "$WORK/shahriar/anaconda3/etc/profile.d/conda.sh"
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate mask_rcnn1
 
 echo "Conda env: $CONDA_DEFAULT_ENV"
