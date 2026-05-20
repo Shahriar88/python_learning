@@ -43,6 +43,16 @@
 # #SBATCH --mem=128G OR
 # export JOB=swfpn1; mkdir -p logs; sbatch -p gpu-a100 -w c316-009 --mem=128G --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
 
+# Example 7
+# Dependency Single
+# export JOB=swfpn1; mkdir -p logs; sbatch --dependency=afterok:1234567 -p gpu-a100 -w c316-009 --mem=128G --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
+
+
+# Example 8
+# Dependency Multiple
+# export JOB=swfpn1; mkdir -p logs; sbatch --dependency=afterok:1234567:1234568:1234569 -p gpu-a100 -w c316-009 --mem=128G --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
+
+
 # Check job status
 # sacct -j job_id --format=JobID,JobName,Partition,State,ExitCode,Elapsed,Start,End
 
