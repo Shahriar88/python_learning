@@ -1,6 +1,10 @@
 # ML Book
 https://www.bishopbook.com
 
+# Important Internet Browser Plugin
+1. Google Scholar PDF Reader for Chrome
+2. Excitation - Journal Ranking and Impact Factor for Google Scholar for Chrome
+
 # HPC Info
 https://docs.tacc.utexas.edu/hpc/lonestar6/
 
