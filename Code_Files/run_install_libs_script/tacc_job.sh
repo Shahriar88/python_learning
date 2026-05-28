@@ -52,6 +52,11 @@
 # Dependency Multiple
 # export JOB=swfpn1; mkdir -p logs; sbatch --dependency=afterok:1234567:1234568:1234569 -p gpu-a100 -w c316-009 --mem=128G --job-name="$JOB" --output="logs/${JOB}.out.%j" --error="logs/${JOB}.err.%j" tacc_job.sh "${JOB}.py"
 
+# Example 9
+# gres key: gpu request
+# --gres=gpu:1
+
+
 # Check job status
 # sacct -j job_id --format=JobID,JobName,Partition,State,ExitCode,Elapsed,Start,End
 
