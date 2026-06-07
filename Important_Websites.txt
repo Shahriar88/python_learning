@@ -39,6 +39,7 @@ Annotated Data =============
 https://www.kaggle.com/code/stpeteishii/robot-navigation-predict-and-visualize-importance
 https://www.cityscapes-dataset.com/downloads/
 https://ade20k.csail.mit.edu/
+https://github.com/CSAILVision/ADE20K/tree/main
 https://www.kaggle.com/datasets/gopalbhattrai/pascal-voc-2012-dataset
 https://www.lvisdataset.org/dataset
 https://storage.googleapis.com/openimages/web/factsfigures.html
