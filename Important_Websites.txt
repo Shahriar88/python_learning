@@ -38,6 +38,7 @@ https://cocalc.com/
 Annotation ================
 https://www.makesense.ai/
 https://labelimg.org/
+https://www.cvat.ai/
 
 Only Bounding box and label ======================
 https://www.kaggle.com/datasets/mbkinaci/fruit-images-for-object-detection
