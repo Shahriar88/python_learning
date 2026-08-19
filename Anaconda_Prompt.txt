@@ -1873,6 +1873,12 @@ create partition primary
 format fs=fat32 quick
 assign
 exit
+
+
+
+
+robocopy D:\ E:\ /E /XF install.wim
+dism /Split-Image /ImageFile:D:\sources\install.wim /SWMFile:E:\sources\install.swm /FileSize:3800
 #==============================================================
 
 
