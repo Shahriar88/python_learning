@@ -1879,6 +1879,7 @@ exit
 
 robocopy D:\ E:\ /E /XF install.wim
 dism /Split-Image /ImageFile:D:\sources\install.wim /SWMFile:E:\sources\install.swm /FileSize:3800
+dir E:\EFI\BOOT\BOOTX64.EFI
 #==============================================================
 
 
