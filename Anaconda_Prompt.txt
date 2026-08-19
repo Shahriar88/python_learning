@@ -1863,8 +1863,16 @@ img = show_visualtorch_classifier(
 
 
 
-
-
+Bootable Disk =========
+diskpart
+list disk
+select disk X
+clean
+convert gpt
+create partition primary
+format fs=fat32 quick
+assign
+exit
 #==============================================================
 
 
