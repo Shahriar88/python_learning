@@ -49,6 +49,10 @@ https://cocalc.com/
 
 
 # ==================================
+
+Huggingface
+https://huggingface.co/datasets
+
 Annotation ================
 https://www.cvat.ai/
 https://www.makesense.ai/
