@@ -8,7 +8,12 @@ https://dl.acm.org/
 
 # ==================================
 # Trained Models
-1.https://llama.app/
+1.
+https://llama.app/
+https://github.com/ggml-org/llama.cpp/releases/?
+2.
+
+
 
 # ==================================
 # Important Internet Browser Plugin
