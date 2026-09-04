@@ -7,7 +7,7 @@ https://www.bishopbook.com
 https://dl.acm.org/
 
 # ==================================
-# Trained Models
+# Trained Offline Models
 1.
 https://llama.app/
 https://github.com/ggml-org/llama.cpp/releases/?
