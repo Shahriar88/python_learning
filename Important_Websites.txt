@@ -3,9 +3,12 @@
 https://www.bishopbook.com
 
 # ==================================
-Journal Paper and Citation
+# Journal Paper and Citation
 https://dl.acm.org/
 
+# ==================================
+# Trained Models
+1.https://llama.app/
 
 # ==================================
 # Important Internet Browser Plugin
