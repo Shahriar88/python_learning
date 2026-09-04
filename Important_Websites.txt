@@ -11,6 +11,12 @@ https://dl.acm.org/
 1.
 https://llama.app/
 https://github.com/ggml-org/llama.cpp/releases/?
+
+Example for Windows:
+Download from https://github.com/ggml-org/llama.cpp/releases/?#release-b10816
+cd llama-b10816-bin-win-cpu-x64
+.\llama.exe serve -hf ggml-org/gemma-3-12b-it-qat-GGUF -c 8192 -fa on
+
 2.
 
 
