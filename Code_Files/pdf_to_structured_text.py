@@ -360,7 +360,9 @@ else:
 # ============================================================
 
 # Install Docling once:
-# py -m pip install docling
+# conda create -n docling python=3.11 -y
+# conda activate docling
+# pip install docling
 
 
 # ============================================================
@@ -842,7 +844,10 @@ else:
 # ============================================================
 
 # Install Docling once:
-# py -m pip install docling
+# conda create -n docling python=3.11 -y
+# conda activate docling
+# pip install docling
+
 
 
 # ============================================================
@@ -1360,7 +1365,10 @@ else:
 # ============================================================
 
 # Install Docling once:
-# py -m pip install docling
+# conda create -n docling python=3.11 -y
+# conda activate docling
+# pip install docling
+
 
 
 # ============================================================
@@ -1942,7 +1950,10 @@ else:
 # ============================================================
 
 # Install Docling once:
-# py -m pip install docling
+# conda create -n docling python=3.11 -y
+# conda activate docling
+# pip install docling
+
 
 
 # ============================================================
