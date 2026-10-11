@@ -1917,6 +1917,9 @@ codex
 cd /d "C:\path\to\project" && codex "Read and follow the instructions in path\to\prompt.txt"
 # With timer
 timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex "Read and follow the instructions in path\to\prompt.txt"
+# Auto Exit
+timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex "Read and follow the instructions in path\to\prompt.txt" & conda deactivate & exit
+
 
 #==============================================================
 #==============================================================
