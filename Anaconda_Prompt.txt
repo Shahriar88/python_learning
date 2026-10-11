@@ -1884,6 +1884,41 @@ dir E:\EFI\BOOT\BOOTX64.EFI
 
 
 
+
+
+
+#==============================================================
+#==============================================================
+# Use ChatGPT on Conda Terminal
+#==============================================================
+#==============================================================
+
+# Create and activate environment
+conda create -n codex-env python=3.11 nodejs -c conda-forge -y
+conda activate codex-env
+
+# Check Node.js and npm
+node --version
+npm --version
+
+# Install Codex
+npm install -g @openai/codex
+codex --version
+
+# Login (logout only when switching accounts)
+codex logout
+codex login
+codex login status
+
+# Start Codex
+codex
+
+# Run Codex in a project using instructions from a text file
+cd /d "C:\path\to\project" && codex "Read and follow the instructions in path\to\prompt.txt"
+
+#==============================================================
+#==============================================================
+
 #==============================================================
 #==============================================================
 #==============================================================
