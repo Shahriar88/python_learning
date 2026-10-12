@@ -1928,6 +1928,12 @@ timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex exec --skip-git-
 # My preference
 timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex exec --skip-git-repo-check --sandbox workspace-write "Read and follow the instructions in path\to\prompt.txt"
 
+# Full Permission Full Permission ***********
+timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex exec --skip-git-repo-check--sandbox danger-full-access "Read and follow the instructions in path\to\prompt.txt" & conda deactivate & exit
+
+# My preference Permission Full Permission ***********
+timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex exec --skip-git-repo-check--sandbox danger-full-access "Read and follow the instructions in path\to\prompt.txt"
+
 
 # Multiple Command
 timeout /t 3600 /nobreak && cd /d "C:\path\to\project" && codex exec --skip-git-repo-check --sandbox workspace-write "Read and follow the instructions in path\to\prompt.txt"  && codex exec --skip-git-repo-check --sandbox workspace-write "Read and follow the instructions in path\to\prompt2.txt" 
