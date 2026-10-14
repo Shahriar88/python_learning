@@ -1972,6 +1972,10 @@ openai --help
 
 
 
+set /p "OPENAI_API_KEY=Enter your API key: "
+
+
+
 
 
 
