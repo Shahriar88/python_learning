@@ -111,3 +111,14 @@ https://roboticsconference.org/
 
 CoRL - Conference on Robot Learning
 https://www.corl.org/
+
+
+
+
+
+
+
+# ==================================================
+zotero-gemini-notebook =============
+
+https://github.com/peterdresslar/zotero-gemini-notebook
