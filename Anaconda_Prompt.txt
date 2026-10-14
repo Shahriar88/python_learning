@@ -1889,7 +1889,7 @@ dir E:\EFI\BOOT\BOOTX64.EFI
 
 #==============================================================
 #==============================================================
-# Use ChatGPT on Conda Terminal
+# Use ChatGPT Codex on Conda Terminal
 #==============================================================
 #==============================================================
 
@@ -1947,6 +1947,33 @@ codex resume --last
 
 #==============================================================
 #==============================================================
+
+
+# Create environment with Go
+conda create -n openai-env -c conda-forge go -y
+conda activate openai-env
+
+# Install official OpenAI CLI
+go install github.com/openai/openai-cli/cmd/openai@latest
+
+
+
+go env GOPATH
+go env GOBIN
+dir "%USERPROFILE%\go\bin\openai.exe"
+
+"%USERPROFILE%\go\bin\openai.exe" --help
+
+
+set "PATH=%USERPROFILE%\go\bin;%PATH%"
+# Check installation (requires Go bin on PATH)
+where openai
+openai --help
+
+
+
+
+
 
 #==============================================================
 #==============================================================
