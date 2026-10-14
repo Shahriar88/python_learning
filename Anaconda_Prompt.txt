@@ -1971,8 +1971,14 @@ where openai
 openai --help
 
 
-
+https://platform.openai.com/api-keys
 set /p "OPENAI_API_KEY=Enter your API key: "
+
+
+openai responses create --model gpt-6-sol --input "Explain laser directed energy deposition in three sentences."
+openai responses create --model gpt-6-sol --input "Hello" --format-error json
+
+
 
 
 
