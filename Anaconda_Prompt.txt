@@ -413,6 +413,7 @@ pip install --upgrade --force-reinstall --no-cache-dir torch torchvision torchau
 
 # LLaVA  ****************************************************************
 https://llava-vl.github.io/
+https://github.com/haotian-liu/LLaVA/blob/main/docs/MODEL_ZOO.md
 https://www.jetson-ai-lab.com/tutorial_live-llava.html
 
 
@@ -433,7 +434,9 @@ Install Microsoft Visual C++ distribution (see C++Distribution.png)
 #_______________________________________________________________________________
 
 
-
+# Hugging Face ****************************************************************
+https://huggingface.co/nlpconnect/vit-gpt2-image-captioning?
+#_______________________________________________________________________________
 
 # matplotlib restarting kernel error troubleshoot ****************************************************************
 import os
