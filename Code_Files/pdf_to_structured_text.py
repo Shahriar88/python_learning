@@ -4,7 +4,7 @@ Created on Tue Aug 25 10:48:55 2026
 
 conda create -n docling python=3.12 -y
 conda activate docling
-pip install docling
+pip install docling==2.142.1
 
 python pdf_to_structured_text.py ".\pdf" ".\structured_papers" separate skip
 OR
