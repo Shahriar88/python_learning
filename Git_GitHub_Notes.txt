@@ -30,6 +30,40 @@ cd LDED
 # Complete GitHub login in your browser.
 
 
+
+#==============================================================
+# GitHub Authentication: Browser Login or Personal Access Token
+#==============================================================
+# Recommended: Git Credential Manager (GCM) browser sign-in.
+# With GCM you generally do NOT need to generate a token yourself.
+# When prompted, select "manager", choose browser sign-in,
+# and authorize GitHub. Choose "Always use this option" if offered.
+# Verify the configured credential helper:
+git config --global --get credential.helper
+
+# Alternative: Create a GitHub Personal Access Token (PAT)
+# 1. Log in at https://github.com
+# 2. Profile picture > Settings > Developer settings
+# 3. Personal access tokens > Fine-grained tokens
+#    Direct URL: https://github.com/settings/personal-access-tokens
+# 4. Generate new token; add a descriptive name and expiration.
+# 5. Resource owner: select your own GitHub account (Shahriar88).
+# 6. Repository access: Only select repositories > LDED.
+# 7. Repository permissions: Contents = Read and write.
+#    GitHub automatically includes Metadata = Read-only.
+# 8. Generate token and copy it securely. GitHub may show it only once.
+# 9. At an HTTPS Git username/password prompt, enter:
+#      Username: Shahriar88
+#      Password: paste the PAT (NOT your GitHub account password)
+#    Depending on your Git configuration, a browser login may appear instead.
+# 10. If token expires or is compromised, rotate/revoke it in Settings.
+# IMPORTANT: Never put the token in a command URL, repository,
+# script, screenshot, text notes, or git config; do not share it.
+# To avoid repeated logins, use GCM (installed separately if missing).
+# GitHub official documentation:
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+# https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git?platform=windows
+
 # Step 3. Copy files to your local repository
 # Copy the files you want to upload into:
 # C:\Users\kec994\Documents\LDED\
@@ -178,4 +212,66 @@ git lfs ls-files
 # 8. git lfs track applies to new staged file versions.
 # 9. Git LFS migration may rewrite previous commits.
 # 10. Never upload private credentials or API keys.
+#==============================================================
+
+#==============================================================
+# EXAMPLE USAGE 1: Upload a NEW large ZIP file with Git LFS
+#==============================================================
+# Assumptions: Repository already cloned; file copied into LDED;
+# it has NOT previously been committed as an ordinary Git file.
+# Commands are for Windows Anaconda Prompt (CMD).
+# Only run these commands when you intend to upload the ZIP.
+cd /d C:\Users\kec994\Documents\LDED
+
+# Check status and update a clean main branch before staging files
+git status
+git pull --ff-only origin main
+
+# Enable LFS locally (once per computer) and track this exact ZIP
+git lfs install
+git lfs track "Primary_Setup_Oct16_2026.zip"
+
+# Stage LFS rules and the new ZIP file
+git add .gitattributes
+git add "Primary_Setup_Oct16_2026.zip"
+
+# Inspect before publishing
+git status
+git lfs ls-files
+git diff --cached --stat
+
+# Commit locally, then upload to GitHub
+git commit -m "Add setup ZIP using Git LFS"
+git push origin main
+
+# Note: If this ZIP was previously committed WITHOUT LFS,
+# tracking it now does not remove historical ordinary Git blobs.
+# Do NOT run 'git lfs migrate import --everything' casually.
+
+#==============================================================
+# EXAMPLE USAGE 2: Upload normal changes to existing LDED repo
+#==============================================================
+# Use after editing or copying project files into LDED.
+# On a clean working tree, pull first; if the tree is not clean,
+# commit/stash your work before pulling.
+cd /d C:\Users\kec994\Documents\LDED
+
+git status
+git pull --ff-only origin main
+
+# Stage files; check the filenames/content carefully before commit
+git add .
+git diff --cached --stat
+git diff --cached
+git status
+
+git commit -m "Update LDED files"
+git push origin main
+
+# Notes:
+# - 'git add .' may stage all changes, including accidental secrets.
+# - '.gitignore' should exclude temporary files and local secrets.
+# - 'git pull --ff-only' stops if local/remote histories diverge.
+# - Commit and push only after reviewing the staged changes.
+# - If there are no changes, git commit reports nothing to commit.
 #==============================================================
