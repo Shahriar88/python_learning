@@ -1,0 +1,181 @@
+
+#==============================================================
+# Git and GitHub: Windows Anaconda Prompt (LDED repository)
+#==============================================================
+# Run these commands in Anaconda Prompt (Windows CMD syntax).
+# Repository: https://github.com/Shahriar88/LDED
+# Local folder: C:\Users\kec994\Documents\LDED
+# Clone only once. Later, use pull/add/commit/push.
+
+# Step 1. Install Git and Git LFS
+conda install -c conda-forge git git-lfs -y
+
+git --version
+git lfs version
+
+# Configure your Git identity (once per computer)
+git config --global user.name "Shahriar88"
+git config --global user.email "shahriar.forhad.eee@gmail.com"
+git config --global --list
+
+
+# Step 2. Clone the existing GitHub repository (first time only)
+cd /d C:\Users\kec994\Documents
+git clone https://github.com/Shahriar88/LDED.git
+cd LDED
+
+# During authentication:
+# Select Git Credential Manager ("manager").
+# Select "Always use this option" if shown.
+# Complete GitHub login in your browser.
+
+
+# Step 3. Copy files to your local repository
+# Copy the files you want to upload into:
+# C:\Users\kec994\Documents\LDED\
+# Check for passwords, API keys, and unwanted files before uploading.
+
+
+# Step 4. Upload files to GitHub (normal workflow)
+cd /d C:\Users\kec994\Documents\LDED
+
+# Check repository status
+git status
+
+# Get remote updates first (prefer a clean working tree)
+git pull --ff-only origin main
+
+# Add all new, modified, and deleted files
+git add .
+
+# Review staged changes
+git diff --cached --stat
+git status
+
+# Commit changes
+git commit -m "Upload LDED files"
+
+# Upload to GitHub
+git push origin main
+
+
+# Step 5. Useful status commands
+git branch --show-current
+git remote -v
+git log -5 --oneline
+git status
+
+
+# Step 6. Undo changes (use carefully)
+
+# Unstage files without deleting local changes
+git restore --staged .
+
+# Discard uncommitted changes to tracked files
+# WARNING: This permanently discards those edits.
+git restore .
+
+# Note: git restore . does not remove new untracked files.
+
+
+#==============================================================
+# Alternative A: Create a new repository on the command line
+#==============================================================
+# Use only for a new local project and an empty remote repository.
+
+echo # LDED> README.md
+git init
+git add README.md
+git commit -m "First commit"
+git branch -M main
+git remote add origin https://github.com/Shahriar88/LDED.git
+git push -u origin main
+
+
+#==============================================================
+# Alternative B: Push an existing local Git repository
+#==============================================================
+# Use if the local repository has no origin remote
+# and the remote history is compatible.
+
+git remote -v
+git remote add origin https://github.com/Shahriar88/LDED.git
+git branch -M main
+git push -u origin main
+
+# If origin already exists but has the wrong URL:
+git remote set-url origin https://github.com/Shahriar88/LDED.git
+
+
+#==============================================================
+# Git LFS: Upload large files
+#==============================================================
+
+# Install Git LFS
+conda install -c conda-forge git-lfs -y
+
+# Initialize Git LFS
+git lfs install
+
+# Go to repository
+cd /d C:\Users\kec994\Documents\LDED
+
+# Track a new ZIP file using Git LFS
+git lfs track "Primary_Setup_Oct16_2026.zip"
+
+# Stage LFS configuration and ZIP
+git add .gitattributes "Primary_Setup_Oct16_2026.zip"
+
+# Check status
+git status
+
+# Commit
+git commit -m "Track setup ZIP with Git LFS"
+
+# Upload to GitHub
+git push origin main
+
+# Verify LFS tracking
+git lfs ls-files
+
+
+#==============================================================
+# Git LFS: Migrate a previously committed large file
+#==============================================================
+# Only use if the file was previously committed as regular Git.
+# WARNING: Migration can rewrite Git history.
+# Back up your repository before running migration.
+
+# Inspect the file history
+git log --oneline --all -- "Primary_Setup_Oct16_2026.zip"
+
+# Inspect migration information
+git lfs migrate info --everything
+
+# Migrate the ZIP into Git LFS (history rewriting)
+git lfs migrate import --include="Primary_Setup_Oct16_2026.zip" --everything
+
+# Verify changes
+git status
+git log -5 --oneline
+git lfs ls-files
+
+# A published repository may require a coordinated
+# force-with-lease push after migration.
+# Do not force-push without checking collaborators
+# and preserving backups.
+
+#==============================================================
+# IMPORTANT NOTES
+#==============================================================
+# 1. git clone is generally needed only once.
+# 2. git add . stages new, modified, and deleted files.
+# 3. git commit saves staged changes locally.
+# 4. git push sends committed changes to GitHub.
+# 5. git pull retrieves and integrates remote changes.
+# 6. git restore --staged . unstages without discarding edits.
+# 7. git restore . discards uncommitted tracked-file edits.
+# 8. git lfs track applies to new staged file versions.
+# 9. Git LFS migration may rewrite previous commits.
+# 10. Never upload private credentials or API keys.
+#==============================================================
