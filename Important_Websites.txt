@@ -74,11 +74,15 @@ https://www.lvisdataset.org/dataset
 https://storage.googleapis.com/openimages/web/factsfigures.html
 https://cocodataset.org/#download
 
+# Instance Segmentation ==
 
 https://www.cvlibs.net/datasets/kitti/
 https://www.wilddash.cc/
 https://zenodo.org/records/10518968?
 
+https://huggingface.co/datasets/MedOtter/PanNuke?
+https://huggingface.co/datasets/MedOtter/CoNIC2022?
+#==
 
 
 https://www.mycpu.org/nn-visualize/
